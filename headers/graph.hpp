@@ -2,6 +2,8 @@ class Point {
 	public:
 	float x;
 	float y;
+	virtual std::shared_ptr<Edge> choose() = 0;
+	virtual std::shared_ptr<Edge> chooseExcept(std::shared_ptr<Edge> exception) = 0;
 };
 
 class EdgeProperty {
@@ -21,6 +23,10 @@ class Edge {
 	int properties_num;
 	float length;
 	float piece_length;
+	
+	double velocityAt(int fragment) {
+		return properties.at(fragment);
+	}
 };
 
 class SpecialPoint : public Point {
@@ -28,6 +34,16 @@ class SpecialPoint : public Point {
 	//and represent cities
 	public:
 	std::vector<std::shared_ptr<Edge>> edges;
+	std::shared_ptr<Edge> choose(); //both virtual in base class
+	std::shared_ptr<Edge> chooseExcept(std::shared_ptr<Edge> exception);
+	
+};
+
+class UsualPoint : public Point {
+	public:
+	std::pair<std::shared_ptr<Edge>, std::shared_ptr<Edge>> myEdges;
+	std::shared_ptr<Edge> choose(); //both virtual in base class
+	std::shared_ptr<Edge> chooseExcept(std::shared_ptr<Edge> exception);
 };
 
 class Graph {

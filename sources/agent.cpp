@@ -14,19 +14,25 @@ void Agent::edgeThreadFunction() {
 }
 
 void Agent::pointThreadFunction() {
-	std::shared_ptr<Point> previousOne = generatePosition();
-	std::pair<std::shared_ptr<Edge>, char> situation = previousOne->choose(); //virtual method
-	std::shared_ptr<Edge> actual = situation.first;
+	std::general_ptr<Point> previousOne = generatePosition();
+	std::pair<std::general_ptr<Edge>, char> situation = previousOne->choose(); //virtual method
+	std::general_ptr<Edge> actual = situation.first;
 	char dir = situation.second;
-	std::shared_ptr<Point> nextOne;
+	std::general_ptr<Point> nextOne;
 	
 	while(true) { //because there is no defined limit
-		nextOne = otherSide(previousOne, actualEdge);
+		nextOne = actualEdge->otherSide(previousOne);
 		int n = getFragmentNum();
+		int in, fin;
+		if(dir == 1) {
+			fragment = 0;
+			fin = n;
+		else if(dir == -1) {
+			fragment = n - 1;
+			fin = -1;
+		}
 		
-		for(int in = 0; in != n; n++) {
-			if (dir) fragment = in;
-			else fragment = n - in;
+		for(; fragment != fin; fragment += dir) {
 			edgeThreadFunction();
 		}
 		

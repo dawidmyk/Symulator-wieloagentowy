@@ -6,7 +6,7 @@ class Agent {
 	//std::thread edgeThread;
 	std::thread pointThread;
 	
-	std::shared_ptr<Edge> actualEdge;
+	std::general_ptr<Edge> actualEdge;
 	int fragment; //used for checking velocity
 	
 	void edgeThreadFunction();

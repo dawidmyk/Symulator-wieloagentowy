@@ -1,19 +1,20 @@
-void Agent::edgeThreadFunction() {
+void Agent::runFunction() {
 	double pos = 0;
 	double fragmentLength = getFragmentLength();
 	std::chrono::time_point<std::chrono::high_resolution_clock> first, second;
 	first = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double> diff;
 	while(pos < fragmentLength) {
+		std::lock_guard(posits);
 		second = std::chrono::high_resolution_clock::now();
 		diff = second - first;
 		first = second;
 		pos += diff.count()*getVelocity();
 		//here little change with sin and cos
-	}
+	} //nie jest dopracowana
 }
 
-void Agent::pointThreadFunction() {
+void Agent::threadFunction() {
 	std::general_ptr<Point> previousOne = generatePosition();
 	std::pair<std::general_ptr<Edge>, char> situation = previousOne->choose(); //virtual method
 	std::general_ptr<Edge> actual = situation.first;

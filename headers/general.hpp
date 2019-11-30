@@ -5,16 +5,16 @@ namespace std {
 	class general_ptr {
 		kind * object;
 		public:
-		kind & operator * () {
+		kind & operator * () const {
 			return *object;
 		}
-		kind * operator -> () {
+		kind * operator -> () const {
 			return object;
 		}
 		bool isEmpty() const {
 			return object == nullptr;
 		}
-		operator bool() {
+		operator bool() const {
 			return !isEmpty();
 		}
 		bool operator == (const general_ptr<kind> & another) const {
@@ -23,7 +23,7 @@ namespace std {
 		bool operator != (const general_ptr<kind> & another) const {
 			return ! operator == (another);
 		}
-		kind * get() {
+		kind * get() const {
 			return object;
 		}
 		void set(kind * object) {
@@ -38,6 +38,7 @@ namespace std {
 		general_ptr & operator = (general_ptr<kind> && another) = default;
 		general_ptr & operator = (const std::unique_ptr<kind> & object) {
 			this->object = object.get();
+			return *this;
 		}
 		~general_ptr() = default;
 		};

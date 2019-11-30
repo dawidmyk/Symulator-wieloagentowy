@@ -1,3 +1,6 @@
+#include <chrono>
+#include "../headers/agent.hpp"
+//this include should be changed when we have Makefile/Sconsfile
 void Agent::runFunction() {
 	double pos = 0;
 	double fragmentLength = getFragmentLength();
@@ -5,7 +8,7 @@ void Agent::runFunction() {
 	first = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double> diff;
 	while(pos < fragmentLength) {
-		std::lock_guard(posits);
+		std::lock_guard lock(posits);
 		second = std::chrono::high_resolution_clock::now();
 		diff = second - first;
 		first = second;
@@ -15,13 +18,17 @@ void Agent::runFunction() {
 }
 
 void Agent::threadFunction() {
-	std::general_ptr<Point> previousOne = generatePosition();
-	std::pair<std::general_ptr<Edge>, char> situation = previousOne->choose(); //virtual method
-	std::general_ptr<Edge> actual = situation.first;
-	char dir = situation.second;
-	std::general_ptr<Point> nextOne;
+	auto previousOne = begin;
+	auto situation = previousOne->choose(); //virtual method
+	auto actual = situation.first;
+	char dir = situation.second; //this variable may be reached form other 
+	auto nextOne;
 	
 	while(true) { //because there is no defined limit
+		{
+			std::lock_guard<std::mutex> lock(dir_read);
+			this->dir = dir;
+		}
 		nextOne = actualEdge->otherSide(previousOne);
 		int n = getFragmentNum();
 		int in, fin;
@@ -39,7 +46,10 @@ void Agent::threadFunction() {
 		
 		previousOne = nextOne;
 		situation = previousOne->chooseExcept(actual);
-		actual = situation.first;
-		dir = situation.second;
+		{
+			std::lock_guard<std::mutex> lock(dir_read)
+			actual = situation.first;
+			dir = situation.second;
+		}
 	}
 }

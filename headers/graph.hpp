@@ -1,6 +1,5 @@
 #include <vector>
 #include "agent.hpp"
-
 class Graph {
 	//here pointers in containers
 	//are to be owners of the objects
@@ -41,14 +40,17 @@ class Graph {
 	}
 	
 	void setEdgeProperties(int nume, const std::vector<EdgeProperty> & properties) {
-		this->properties = properties;
-		this->properties_num = properties.size();
+		edges.at(nume)->properties = properties;
+		edges.at(nume)->properties_num = properties.size();
 	}
 	
 	void addEdgeProperty(int nume, const EdgeProperty & property) {
-		this->properties.push_back(property);
-		this->properties_num++;
+		edges.at(nume)->properties.push_back(property);
+		edges.at(nume)->properties_num++;
 	}
+	
+	void actualize(const std::general_ptr<Agent> & agent, float x, float y);
+	//ta metoda komunikuje się z widokiem
 		
 	
 	std::general_ptr<Point> spotPoint(float x, float y) {
@@ -73,6 +75,14 @@ class Graph {
 			}
 		}
 	}
+	void agentCrashThread() {
+		while(true)
+			for(auto & ptr1 : agents)
+				for(auto & ptr2 : agents)
+					if(Agent::crash(ptr1, ptr2))
+						noteCrash(ptr1, ptr2);
+	}	
+	
 			
 };
 

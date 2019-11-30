@@ -26,8 +26,8 @@ class Graph {
 	}
 	
 	void addEdgeNum(int begin, int end, int fragments = 0) {
-		edges.push_back(std::unique_ptr<Edge>(new Edge(std::general_ptr<Point>(points.at(begin)),
-		std::general_ptr<Point>(points.at(end)), fragments)));
+		edges.push_back(std::unique_ptr<Edge>(new Edge(std::general_ptr(points.at(begin)),
+		std::general_ptr(points.at(end)), fragments)));
 	}
 	
 	void addAgent(float x1, float y1, float x2, float y2) {
@@ -35,8 +35,8 @@ class Graph {
 	}
 	
 	void addAgentNum(int begin, int end) {
-		agents.push_back(std::unique_ptr<Agent>(new Agent(std::general_ptr<Point>(points.at(begin)),
-		std::general_ptr<Point>(points.at(end)))));
+		agents.push_back(std::unique_ptr<Agent>(new Agent(std::general_ptr(points.at(begin)),
+		std::general_ptr(points.at(end)))));
 	}
 	
 	void setEdgeProperties(int nume, const std::vector<EdgeProperty> & properties) {
@@ -61,16 +61,16 @@ class Graph {
 				ret = ptr;
 				found++;
 			}
-			if (found == 2) return std::general_ptr<Point>();
+			if (found == 2) return std::general_ptr<Point>(); //nullptr
 		}
 		if(found == 1) return ret;
-		if(found == 0) return std::general_ptr<Point>();
+		if(found == 0) return std::general_ptr<Point>(); //nullptr
 	}
 	
 	void agentDrawThread() {
 		while (true) { //tam jest tak naprawde jakaś zmienna graphu
 			for(auto & ptr : agents) {
-				std::pair<float, float> posit = ptr->locate();
+				std::pair posit = ptr->locate();
 				actualize(ptr, posit.first, posit.second);
 			}
 		}
@@ -81,8 +81,10 @@ class Graph {
 				for(auto & ptr2 : agents)
 					if(Agent::crash(ptr1, ptr2))
 						noteCrash(ptr1, ptr2);
-	}	
+	}
 	
+	void noteCrash(const std::general_ptr<Agent> & ptr1, const std::general_ptr<Agent> & ptr2);
+	//ta metoda komunikuje się z widokiem
 			
 };
 

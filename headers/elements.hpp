@@ -63,6 +63,10 @@ class Edge {
 		return 0;
 	}
 	
+	int getFragmentNum() {
+		return properties_num;
+	}
+	
 };
 	
 class SpecialPoint : public Point {

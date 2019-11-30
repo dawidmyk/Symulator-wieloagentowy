@@ -22,34 +22,39 @@ void Agent::threadFunction() {
 	auto situation = previousOne->choose(); //virtual method
 	auto actual = situation.first;
 	char dir = situation.second; //this variable may be reached form other 
-	auto nextOne;
+	{
+			std::lock_guard lock(dir_read);
+			this->actual = actual;
+			this->dir = dir;
+	}
+	std::general_ptr<Point> nextOne;
 	
 	while(true) { //because there is no defined limit
-		{
-			std::lock_guard<std::mutex> lock(dir_read);
-			this->dir = dir;
-		}
-		nextOne = actualEdge->otherSide(previousOne);
-		int n = getFragmentNum();
-		int in, fin;
+
+		nextOne = actual->otherSide(previousOne);
+		int n = actual->getFragmentNum();
+		int fin;
 		if(dir == 1) {
 			fragment = 0;
 			fin = n;
+		}
 		else if(dir == -1) {
 			fragment = n - 1;
 			fin = -1;
 		}
 		
 		for(; fragment != fin; fragment += dir) {
-			edgeThreadFunction();
+			runFunction();
 		}
 		
 		previousOne = nextOne;
 		situation = previousOne->chooseExcept(actual);
+		actual = situation.first;
+		dir = situation.second;
 		{
-			std::lock_guard<std::mutex> lock(dir_read)
-			actual = situation.first;
-			dir = situation.second;
+			std::lock_guard lock(dir_read);
+			this->actual = actual;
+			this->dir = dir;
 		}
 	}
 }

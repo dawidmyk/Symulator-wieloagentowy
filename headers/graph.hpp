@@ -1,6 +1,11 @@
 #include <vector>
 #include "agent.hpp"
+#include <random>
+
+
+
 class Graph {
+	
 	//here pointers in containers
 	//are to be owners of the objects
 	public:
@@ -10,12 +15,17 @@ class Graph {
 	std::vector<std::unique_ptr<Edge>> edges;
 	std::vector<std::unique_ptr<Agent>> agents;
 	
+	std::unique_ptr<std::thread> agentCrash;
+	std::unique_ptr<std::thread> agentDraw;
+	
+	Rander rander;
+	
 	void addUsualPoint(float x, float y) {
-		points.push_back(std::unique_ptr<Point>(new UsualPoint(x, y)));
+		points.push_back(std::unique_ptr<Point>(new UsualPoint(x, y, rander)));
 	}
 	
 	void addSpecialPoint(float x, float y) {
-		points.push_back(std::unique_ptr<Point>(new SpecialPoint(x, y)));
+		points.push_back(std::unique_ptr<Point>(new SpecialPoint(x, y, rander)));
 	}
 	
 	void addEdge(float x1, float y1, float x2, float y2, int fragments = 0) {
@@ -40,13 +50,11 @@ class Graph {
 	}
 	
 	void setEdgeProperties(int nume, const std::vector<EdgeProperty> & properties) {
-		edges.at(nume)->properties = properties;
-		edges.at(nume)->properties_num = properties.size();
+		edges.at(nume)->setProperties(properties);
 	}
 	
 	void addEdgeProperty(int nume, const EdgeProperty & property) {
-		edges.at(nume)->properties.push_back(property);
-		edges.at(nume)->properties_num++;
+		edges.at(nume)->addProperty(property);
 	}
 	
 	void actualize(const std::general_ptr<Agent> & agent, float x, float y);
@@ -83,6 +91,27 @@ class Graph {
 						noteCrash(ptr1, ptr2);
 	}
 	
+	void spawnAgentDrawThread() {
+		agentDraw.reset(new std::thread(&Graph::agentDrawThread, this));
+	}
+	
+	void spawnAgentCrashThread() {
+		agentCrash.reset(new std::thread(&Graph::agentCrashThread, this));
+	}
+	
+	void spawnAgents() {
+		for(auto & ptr : agents) {
+			ptr->spawn();
+		}
+	}
+	
+	
+	
+	void makeSeed() {
+		rander.makeSeed();
+	}
+		
+
 	void noteCrash(const std::general_ptr<Agent> & ptr1, const std::general_ptr<Agent> & ptr2);
 	//ta metoda komunikuje się z widokiem
 			

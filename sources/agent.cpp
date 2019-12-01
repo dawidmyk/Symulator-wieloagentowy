@@ -2,19 +2,25 @@
 #include "../headers/agent.hpp"
 //this include should be changed when we have Makefile/Sconsfile
 void Agent::runFunction() {
-	double pos = 0;
-	double fragmentLength = getFragmentLength();
+	float pos = 0;
+	float fragmentLength = actual->getFragmentLength();
+	float angle = actual->getAngle();
+	float sinus = sin(angle);
+	float cosinus = cos(angle);
+	float general_move;
 	std::chrono::time_point<std::chrono::high_resolution_clock> first, second;
 	first = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double> diff;
+	std::chrono::duration<float> diff;
 	while(pos < fragmentLength) {
-		std::lock_guard lock(posits);
 		second = std::chrono::high_resolution_clock::now();
 		diff = second - first;
 		first = second;
-		pos += diff.count()*getVelocity();
-		//here little change with sin and cos
-	} //nie jest dopracowana
+		general_move = diff.count()*getVelocity();
+		pos += general_move;
+		std::lock_guard lock(posits);
+		x += general_move * cosinus;
+		y += general_move * sinus;
+	}
 }
 
 void Agent::threadFunction() {

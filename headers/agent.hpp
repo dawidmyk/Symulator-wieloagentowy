@@ -6,16 +6,16 @@ class Agent {
 	static float close;
 	float x;
 	float y;
-	float roadAngle;
 	char dir;
 	std::mutex posits;
 	std::mutex dir_read;
 	std::mutex edgeLock;
-	//std::thread edgeThread;
-	std::thread pointThread;
+
+	std::unique_ptr<std::thread> pointThread;
 	
 	std::general_ptr<Point> begin, end;
 	std::general_ptr<Edge> actual;
+	
 	int fragment; //used for checking velocity
 	
 	Agent(const std::general_ptr<Point> & begin, const std::general_ptr<Point> & end): begin(begin), end(end) {}
@@ -25,9 +25,6 @@ class Agent {
 	
 	double getVelocity() {
 		return actual->velocityAt(fragment);
-	}
-	double getFragmentLength() {
-		return actual->piece_length;
 	}
 	
 	std::pair<float, float> locate() {
@@ -54,6 +51,10 @@ class Agent {
 			if(one->actual == second->actual && one->dir == -second->dir) return true;
 			return false;
 		}
+	}
+	
+	void spawn() {
+		pointThread.reset(new std::thread(&Agent::threadFunction, this));
 	}
 
 };

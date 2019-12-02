@@ -32,3 +32,24 @@ std::pair<std::general_ptr<Edge>, char> UsualPoint::chooseExcept(const std::gene
 	if (myEdges.first != exception) return std::pair(myEdges.first, myEdges.first->side(std::general_ptr<Point>(this)));
 	return std::pair(myEdges.second, myEdges.second->side(std::general_ptr<Point>(this)));
 }
+
+std::pair<float, float> Point::countDimensions(const std::general_ptr<Point> & one, const std::general_ptr<Point> & second) {
+		float xdiff = one->x - second->x;
+		float ydiff = one->y - second->y;
+		float distance = sqrt(xdiff*xdiff + ydiff*ydiff);
+		float angle = atan2(ydiff, xdiff);
+		return std::pair(distance, angle);
+}
+
+void Edge::countDimensions() {
+		auto dimensions = Point::countDimensions(begin, end);
+		length = dimensions.first;
+		piece_length = length/properties_num;
+		angle = dimensions.second;
+}
+
+bool Point::spotted(float x, float y) {
+		float xdiff = x - this->x;
+		float ydiff = y - this->y;
+		return (sqrt(xdiff*xdiff + ydiff*ydiff) <= close);
+}

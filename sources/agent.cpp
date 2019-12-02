@@ -1,6 +1,36 @@
 #include <chrono>
 #include "../headers/agent.hpp"
 //this include should be changed when we have Makefile/Sconsfile
+
+Agent::Agent(const std::general_ptr<Point> & begin, const std::general_ptr<Point> & end): dir(0), active(false), begin(begin),
+	end(end), fragment(-1) {
+		auto pointPositions = begin->locate();
+		x = pointPositions.first;
+		y = pointPositions.second;	
+}
+	
+bool Agent::twoClose(const std::general_ptr<Agent> & one, const std::general_ptr<Agent> & second) {
+		std::lock_guard lock1(one->posits);
+		std::lock_guard lock2(second->posits);
+		float xdiff = one->x - second->x;
+		float ydiff = one->y - second->y;
+		return (sqrt(xdiff*xdiff + ydiff*ydiff) <= close);
+}
+
+bool Agent::crash(const std::general_ptr<Agent> & one, const std::general_ptr<Agent> & second) {
+		if(!one->checkActive()||!second->checkActive()) return false;
+		bool ifClose = twoClose(one, second);
+		if(!ifClose) return false;
+		{
+			std::lock_guard lock1(one->dir_read);
+			std::lock_guard lock2(second->dir_read);
+			//it is to correct because there might occur a deadlock
+			if(one->actual == second->actual && one->dir == -second->dir) return true;
+			return false;
+		}
+}
+
+
 void Agent::runFunction() {
 	float pos = 0;
 	float fragmentLength = actual->getFragmentLength();

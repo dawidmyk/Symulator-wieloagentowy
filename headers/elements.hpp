@@ -39,19 +39,9 @@ class Point {
 	virtual std::pair<std::general_ptr<Edge>, char> choose() = 0;
 	virtual std::pair<std::general_ptr<Edge>, char> chooseExcept(const std::general_ptr<Edge> & exception) = 0;
 
-	bool spotted(float x, float y) {
-		float xdiff = x - this->x;
-		float ydiff = y - this->y;
-		return (sqrt(xdiff*xdiff + ydiff*ydiff) <= close);
-	}
+	bool spotted(float x, float y);
 	
-	static std::pair<float, float> countDimensions(const std::general_ptr<Point> & one, const std::general_ptr<Point> & second) {
-		float xdiff = one->x - second->x;
-		float ydiff = one->y - second->y;
-		float distance = sqrt(xdiff*xdiff + ydiff*ydiff);
-		float angle = atan2(ydiff, xdiff);
-		return std::pair(distance, angle);
-	}
+	static std::pair<float, float> countDimensions(const std::general_ptr<Point> & one, const std::general_ptr<Point> & second);
 	
 	std::pair<float, float> locate() {
 		return std::pair(x, y);
@@ -90,12 +80,7 @@ class Edge {
 		}
 	
 	
-	void countDimensions() {
-		auto dimensions = Point::countDimensions(begin, end);
-		length = dimensions.first;
-		piece_length = length/properties_num;
-		angle = dimensions.second;
-	}
+	void countDimensions();
 		
 	double velocityAt(int fragment) {
 		return properties.at(fragment).capacity;

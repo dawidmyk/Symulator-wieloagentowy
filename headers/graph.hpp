@@ -62,19 +62,7 @@ class Graph {
 
 		
 	
-	std::general_ptr<Point> spotPoint(float x, float y) {
-		std::general_ptr<Point> ret;
-		char found = 0;
-		for(auto & ptr : points) {
-			if(ptr->spotted(x, y)) {
-				ret = ptr;
-				found++;
-			}
-			if (found == 2) return std::general_ptr<Point>(); //nullptr
-		}
-		if(found == 1) return ret;
-		if(found == 0) return std::general_ptr<Point>(); //nullptr
-	}
+	std::general_ptr<Point> spotPoint(float x, float y);
 	
 	void agentDrawThread(Console & cons, ThreadInterruptible & thread);
 	void agentCrashThread(Console & cons, ThreadInterruptible & thread);

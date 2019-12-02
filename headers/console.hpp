@@ -5,6 +5,7 @@ Author: Mateusz Szewczyk
 #ifndef CONSOLE
 #define CONSOLE
 #include "graph.hpp"
+#include <iostream>
 
 class ThreadInterruptible {
 	std::unique_ptr<std::thread> threadInstance;
@@ -38,21 +39,23 @@ class Console {
 	ThreadInterruptible agentCrash;
 	std::mutex consoleLock;
 	void setAgentDraw() {
-		agentDraw.setThread(std::unique_ptr<std::thread>(new std::thread(&Graph::agentDrawThread, &g, std::ref(*this))));
+		agentDraw.setThread(std::unique_ptr<std::thread>(new std::thread(&Graph::agentDrawThread,
+		&g, std::ref(*this), std::ref(agentDraw))));
 	}
 	void setAgentCrash() {
-		agentCrash.setThread(std::unique_ptr<std::thread>(new std::thread(&Graph::agentCrashThread, &g, std::ref(*this))));
+		agentCrash.setThread(std::unique_ptr<std::thread>(new std::thread(&Graph::agentCrashThread,
+		&g, std::ref(*this), std::ref(agentCrash))));
 	}
 	
 public:
 	Console() {}
 	void run() {
 		//Tu hardkodujemy graf
-		g.add(...);
+		//g.add(...);
 		g.makeSeed();
 		g.spawnAgents();
-		setAgetDraw();
-		setAgetCrash();
+		setAgentDraw();
+		setAgentCrash();
 		g.joinAgents();
 		agentDraw.join();
 		agentCrash.join();
@@ -62,9 +65,9 @@ public:
 		//ta metoda komunikuje się z widokiem
 		std::stringstream agentInformation;
 		agentInformation << "Agent nr " << i;
-		agentInformation << ", Skladowa X " << agents.at(i)->x;
-		agentInformation << ", Skladowa Y " << agents.at(i)->y;
-		agentInformation << ", Predkosc " << agents.at(i)->getVelocity() << std::endl << std::endl;
+		agentInformation << ", Skladowa X " << x;
+		agentInformation << ", Skladowa Y " << y;
+		agentInformation << ", Predkosc " << agent->getVelocity() << std::endl << std::endl;
 		std::lock_guard lock(consoleLock);
 		std::cout << agentInformation.str();
 
@@ -72,16 +75,17 @@ public:
 	
 	void noteCrash(const std::general_ptr<Agent> & ptr1, const std::general_ptr<Agent> & ptr2, int i, int j) {
 		std::stringstream crashInformation;
-		agentInformation << "Agent nr " << i;
-		agentInformation << "<->";
-		agentInformation << "Agent nr " << j << std::endl;
-		agentInformation << "Spotkali się" << std::endl << std::endl;
+		crashInformation << "Agent nr " << i;
+		crashInformation << "<->";
+		crashInformation << "Agent nr " << j << std::endl;
+		crashInformation << "Spotkali się" << std::endl << std::endl;
 		std::lock_guard lock(consoleLock);
-		std::cout << agentInformation.str();
+		std::cout << crashInformation.str();
 	}
 		
 		
 
 };
+
 
 #endif

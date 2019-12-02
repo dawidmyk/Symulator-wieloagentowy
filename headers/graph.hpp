@@ -5,7 +5,8 @@
 #ifndef GRAPH
 #define GRAPH
 
-
+class Console;
+class ThreadInterruptible;
 class Graph {
 	
 	//here pointers in containers
@@ -75,36 +76,9 @@ class Graph {
 		if(found == 0) return std::general_ptr<Point>(); //nullptr
 	}
 	
-	void agentDrawThread(Console & cons) {
-		while (agentDraw.getCondition()) {
-			int i = 0;
-			for(auto & ptr : agents) {
-				std::pair posit = ptr->locate();
-				cons.actualize(ptr, posit.first, posit.second, i);
-				i++;
-			}
-		}
-	}
-	void agentCrashThread(Console & cons) {
-		while(agentCrash.getCondition()) {
-			int i, j;
-			i = 0;
-			for(auto & ptr1 : agents) {
-				j = 0;
-				for(auto & ptr2 : agents) {
-					if(Agent::crash(ptr1, ptr2))
-						cons.noteCrash(ptr1, ptr2, i, j);
-					j++;
-				}
-				i++;
-			}
-		}
-	}
+	void agentDrawThread(Console & cons, ThreadInterruptible & thread);
+	void agentCrashThread(Console & cons, ThreadInterruptible & thread);
 	
-	
-	void spawnAgentCrashThread() {
-		agentCrash.setThread(std::unique_ptr<std::thread>(new std::thread(&Graph::agentCrashThread, this)));
-	}
 	
 	void spawnAgents() {
 		for(auto & ptr : agents) {

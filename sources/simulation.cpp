@@ -1,9 +1,11 @@
 #include "../headers/simulation.hpp"
 #include "../headers/graph.hpp"
 #include "../headers/agent.hpp"
+#include "../headers/console.hpp"
 
 void Simulation::testSimulation() {
 	Graph graph;
+	Console cons(graph);
 	graph.addSpecialPoint(0, 0);
 	graph.addUsualPoint(0, 3);
 	graph.addUsualPoint(2, 0);
@@ -18,5 +20,6 @@ void Simulation::testSimulation() {
 	graph.addAgent(0, 0, 7, 3);
 	graph.addAgent(2, 0, 7, 3);
 	graph.addAgent(5, 2, 0, 0);
+	cons.run();
 
 }

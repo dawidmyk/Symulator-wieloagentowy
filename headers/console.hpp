@@ -34,7 +34,7 @@ class ThreadInterruptible {
 
 class Console {
 	
-	Graph g;
+	Graph & g;
 	ThreadInterruptible agentDraw;
 	ThreadInterruptible agentCrash;
 	std::mutex consoleLock;
@@ -48,7 +48,7 @@ class Console {
 	}
 	
 public:
-	Console() {}
+	Console(Graph & graph): g(graph) {}
 	void run() {
 		//Tu hardkodujemy graf
 		//g.add(...);

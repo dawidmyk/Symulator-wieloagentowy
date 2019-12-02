@@ -10,7 +10,7 @@ public:
 	void testSimulation();
 
 private:
-	Graph graph;
+	//Graph graph;
 	int cargoCount;
 	int vehicleCount; // vehicle count == agents count
 	int vehicleCapacity;

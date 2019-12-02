@@ -30,16 +30,16 @@ class Graph {
 		points.push_back(std::unique_ptr<Point>(new SpecialPoint(x, y, rander)));
 	}
 	
-	void addEdge(float x1, float y1, float x2, float y2, int fragments = 0) {
+	void addEdge(float x1, float y1, float x2, float y2) {
 		//std::general_ptr<Point> begin = spotPoint(x1, y1);
 		//std::general_ptr<Point> end = spotPoint(x2, y2);
 		//tu jeszcze nie założone że może być błąd
-		edges.push_back(std::unique_ptr<Edge>(new Edge(spotPoint(x1, y1), spotPoint(x2, y2), fragments)));
+		edges.push_back(std::unique_ptr<Edge>(new Edge(spotPoint(x1, y1), spotPoint(x2, y2))));
 	}
 	
-	void addEdgeNum(int begin, int end, int fragments = 0) {
+	void addEdgeNum(int begin, int end) {
 		edges.push_back(std::unique_ptr<Edge>(new Edge(std::general_ptr(points.at(begin)),
-		std::general_ptr(points.at(end)), fragments)));
+		std::general_ptr(points.at(end)))));
 	}
 	
 	void addAgent(float x1, float y1, float x2, float y2) {

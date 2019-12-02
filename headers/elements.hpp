@@ -72,10 +72,10 @@ class Edge {
 	float piece_length;
 	float angle;
 	
-	Edge(const std::general_ptr<Point> & begin, const std::general_ptr<Point> & end, int fragments):
+	Edge(const std::general_ptr<Point> & begin, const std::general_ptr<Point> & end):
 		begin(begin),
 		end(end),
-		properties_num(fragments)
+		properties_num(0)
 		{	
 		}
 	

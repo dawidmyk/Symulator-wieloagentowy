@@ -1,6 +1,9 @@
 #include <vector>
 #include "agent.hpp"
+#include <sstream>
 #include <random>
+#ifndef GRAPH
+#define GRAPH
 
 
 
@@ -57,8 +60,18 @@ class Graph {
 		edges.at(nume)->addProperty(property);
 	}
 	
-	void actualize(const std::general_ptr<Agent> & agent, float x, float y);
-	//ta metoda komunikuje się z widokiem
+	std::string actualize() {
+		//ta metoda komunikuje się z widokiem
+		std::stringstream agentInformation;
+		for (int i = 0; i < agents.size(); i++) {
+			agentInformation << "Agent nr " << i;
+			agentInformation << ", Skladowa X " << agents[i]->x;
+			agentInformation << ", Skladowa Y " << agents[i]->y;
+			agentInformation << ", Predkosc " << agents[i]->getVelocity() << "\n";
+			return agentInformation.str();
+		}
+
+	}
 		
 	
 	std::general_ptr<Point> spotPoint(float x, float y) {
@@ -79,7 +92,8 @@ class Graph {
 		while (true) { //tam jest tak naprawde jakaś zmienna graphu
 			for(auto & ptr : agents) {
 				std::pair posit = ptr->locate();
-				actualize(ptr, posit.first, posit.second);
+				//actualize(ptr, posit.first, posit.second);
+				actualize();
 			}
 		}
 	}
@@ -117,3 +131,4 @@ class Graph {
 			
 };
 
+#endif

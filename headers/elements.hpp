@@ -3,13 +3,17 @@
 #include <cmath>
 #include <random>
 #include <mutex>
+#include <time.h>
+#ifndef ELEMENTS
+#define ELEMENTS
+
 class Edge;
 class Rander {
 	std::unique_ptr<std::mt19937> generator;
 	std::mutex rand_mutex;
 	public:
 	void makeSeed() {
-		generator.reset(new std::mt19937(std::time(0)));
+		generator.reset(new std::mt19937(time(0)));
 	}
 	int generate(int size) {
 		std::lock_guard lock(rand_mutex);
@@ -144,3 +148,5 @@ class UsualPoint : public Point {
 	std::pair<std::general_ptr<Edge>, char> choose(); //both virtual in base class
 	std::pair<std::general_ptr<Edge>, char> chooseExcept(const std::general_ptr<Edge> & exception);
 };
+
+#endif

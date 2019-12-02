@@ -6,10 +6,11 @@ Author: Mateusz Szewczyk
 #include "agent.hpp"
 
 class Simulation {
+public:
+	void testSimulation();
 
 private:
-	std::vector<Edge> edges;
-	std::vector<Agent> agents;
+	Graph graph;
 	int cargoCount;
 	int vehicleCount; // vehicle count == agents count
 	int vehicleCapacity;

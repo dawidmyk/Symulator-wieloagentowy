@@ -7,10 +7,12 @@ class Agent {
 	float x;
 	float y;
 	char dir;
+	bool active;
 	std::mutex posits;
 	std::mutex dir_read;
 	std::mutex edgeLock;
-
+	std::mutex activeLock;
+	
 	std::unique_ptr<std::thread> pointThread;
 	
 	std::general_ptr<Point> begin, end;
@@ -18,7 +20,12 @@ class Agent {
 	
 	int fragment; //used for checking velocity
 	
-	Agent(const std::general_ptr<Point> & begin, const std::general_ptr<Point> & end): begin(begin), end(end) {}
+	Agent(const std::general_ptr<Point> & begin, const std::general_ptr<Point> & end): dir(0), active(false), begin(begin),
+	end(end), fragment(-1) {
+		auto pointPositions = begin->locate();
+		x = pointPositions.first;
+		y = pointPositions.second;	
+	}
 	
 	void runFunction();
 	void threadFunction();
@@ -42,6 +49,7 @@ class Agent {
 
 	
 	static bool crash(const std::general_ptr<Agent> & one, const std::general_ptr<Agent> & second) {
+		if(!one->checkActive()||!second->checkActive()) return false;
 		bool ifClose = twoClose(one, second);
 		if(!ifClose) return false;
 		{
@@ -56,6 +64,20 @@ class Agent {
 	void spawn() {
 		pointThread.reset(new std::thread(&Agent::threadFunction, this));
 	}
-
+	
+	void setActive(bool active) {
+		std::lock_guard lock(activeLock);
+		this->active = active;
+	}
+	bool checkActive() {
+		std::lock_guard lock(activeLock);
+		//przydałoby się zorganizować mechanizm mutexów
+		//trochę inaczej żeby możliwe było wielu czytelników i jeden pisarz
+		return active;
+	}
+	
+	void join() {
+		pointThread->join();
+	}
 };
 

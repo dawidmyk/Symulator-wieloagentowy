@@ -47,6 +47,10 @@ class Point {
 		return std::pair(distance, angle);
 	}
 	
+	std::pair<float, float> locate() {
+		return std::pair(x, y);
+	}
+	
 };
 
 class EdgeProperty {

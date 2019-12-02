@@ -24,7 +24,9 @@ void Agent::runFunction() {
 }
 
 void Agent::threadFunction() {
+	setActive(true);
 	auto previousOne = begin;
+	
 	auto situation = previousOne->choose(); //virtual method
 	auto actual = situation.first;
 	char dir = situation.second; //this variable may be reached form other 
@@ -35,7 +37,7 @@ void Agent::threadFunction() {
 	}
 	std::general_ptr<Point> nextOne;
 	
-	while(true) { //because there is no defined limit
+	while(previousOne != end) { //because there is no defined limit
 
 		nextOne = actual->otherSide(previousOne);
 		int n = actual->getFragmentNum();
@@ -63,4 +65,5 @@ void Agent::threadFunction() {
 			this->dir = dir;
 		}
 	}
+	setActive(false);
 }

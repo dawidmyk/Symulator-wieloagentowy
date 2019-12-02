@@ -2,7 +2,30 @@
 #include "agent.hpp"
 #include <random>
 
-
+class ThreadInterruptible {
+	std::unique_ptr<std::thread> threadInstance;
+	bool condition;
+	std::mutex locker;
+	public:
+	ThreadInterruptible(): condition(false) {}
+	void setThread(std::unique_ptr<std::thread> thread) {
+		threadInstance = std::move(thread);
+	}
+	void setCondition(bool condition) {
+		std::lock_guard lock(locker);
+		this->condition = condition;
+	}
+	bool getCondition() {
+		std::lock_guard lock(locker);
+		return condition;
+	}
+	void join() {
+		setCondition(false);
+		threadInstance->join();
+	}
+	
+	
+};
 
 class Graph {
 	
@@ -15,8 +38,8 @@ class Graph {
 	std::vector<std::unique_ptr<Edge>> edges;
 	std::vector<std::unique_ptr<Agent>> agents;
 	
-	std::unique_ptr<std::thread> agentCrash;
-	std::unique_ptr<std::thread> agentDraw;
+	ThreadInterruptible agentDraw;
+	ThreadInterruptible agentCrash;
 	
 	Rander rander;
 	
@@ -76,7 +99,7 @@ class Graph {
 	}
 	
 	void agentDrawThread() {
-		while (true) { //tam jest tak naprawde jakaś zmienna graphu
+		while (agentDraw.getCondition()) { //tam jest tak naprawde jakaś zmienna graphu
 			for(auto & ptr : agents) {
 				std::pair posit = ptr->locate();
 				actualize(ptr, posit.first, posit.second);
@@ -84,7 +107,7 @@ class Graph {
 		}
 	}
 	void agentCrashThread() {
-		while(true)
+		while(agentCrash.getCondition())
 			for(auto & ptr1 : agents)
 				for(auto & ptr2 : agents)
 					if(Agent::crash(ptr1, ptr2))
@@ -92,11 +115,11 @@ class Graph {
 	}
 	
 	void spawnAgentDrawThread() {
-		agentDraw.reset(new std::thread(&Graph::agentDrawThread, this));
+		agentDraw.setThread(std::unique_ptr<std::thread>(new std::thread(&Graph::agentDrawThread, this)));
 	}
 	
 	void spawnAgentCrashThread() {
-		agentCrash.reset(new std::thread(&Graph::agentCrashThread, this));
+		agentCrash.setThread(std::unique_ptr<std::thread>(new std::thread(&Graph::agentCrashThread, this)));
 	}
 	
 	void spawnAgents() {
@@ -105,6 +128,17 @@ class Graph {
 		}
 	}
 	
+	void joinAgents() {
+		for(auto & ptr : agents) ptr->join();
+	}
+	
+	void joinDraw() {
+		agentDraw.join();
+	}
+	
+	void joinCrash() {
+		agentCrash.join();
+	}	
 	
 	
 	void makeSeed() {
@@ -114,6 +148,7 @@ class Graph {
 
 	void noteCrash(const std::general_ptr<Agent> & ptr1, const std::general_ptr<Agent> & ptr2);
 	//ta metoda komunikuje się z widokiem
+	
 			
 };
 

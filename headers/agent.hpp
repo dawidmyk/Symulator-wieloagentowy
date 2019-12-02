@@ -1,6 +1,9 @@
 #include "elements.hpp"
 #include <thread>
 #include <mutex>
+#ifndef AGENT
+#define AGENT
+
 class Agent {
 	
 	static float close;
@@ -86,3 +89,4 @@ class Agent {
 	}
 };
 
+#endif

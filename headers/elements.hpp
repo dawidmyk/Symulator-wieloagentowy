@@ -3,6 +3,11 @@
 #include <cmath>
 #include <random>
 #include <mutex>
+#include <ctime>
+
+#ifndef ELEMENTS
+#define ELEMENTS
+
 class Edge;
 class Rander {
 	std::unique_ptr<std::mt19937> generator;
@@ -153,3 +158,5 @@ class UsualPoint : public Point {
 	std::pair<std::general_ptr<Edge>, char> choose(); //both virtual in base class
 	std::pair<std::general_ptr<Edge>, char> chooseExcept(const std::general_ptr<Edge> & exception);
 };
+
+#endif

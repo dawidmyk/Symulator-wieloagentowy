@@ -25,8 +25,9 @@ class Point {
 	protected:
 	Rander & rander;
 	
-	public:
 	static float close;
+	
+	public:
 	
 	Point(float x, float y, Rander & rander): x(x), y(y), rander(rander) {}
 	
@@ -49,6 +50,10 @@ class Point {
 	
 	std::pair<float, float> locate() {
 		return std::pair(x, y);
+	}
+	
+	void setClose(float close) {
+		Point::close = close;
 	}
 	
 };

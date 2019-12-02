@@ -31,8 +31,6 @@ class Graph {
 	
 	//here pointers in containers
 	//are to be owners of the objects
-	public:
-	static double close;
 	
 	std::vector<std::unique_ptr<Point>> points;
 	std::vector<std::unique_ptr<Edge>> edges;
@@ -42,6 +40,8 @@ class Graph {
 	ThreadInterruptible agentCrash;
 	
 	Rander rander;
+	
+	public:
 	
 	void addUsualPoint(float x, float y) {
 		points.push_back(std::unique_ptr<Point>(new UsualPoint(x, y, rander)));

@@ -2,7 +2,7 @@
 #include <thread>
 #include <mutex>
 class Agent {
-	public:
+	
 	static float close;
 	float x;
 	float y;
@@ -20,6 +20,7 @@ class Agent {
 	
 	int fragment; //used for checking velocity
 	
+	public:
 	Agent(const std::general_ptr<Point> & begin, const std::general_ptr<Point> & end): dir(0), active(false), begin(begin),
 	end(end), fragment(-1) {
 		auto pointPositions = begin->locate();
@@ -78,6 +79,10 @@ class Agent {
 	
 	void join() {
 		pointThread->join();
+	}
+	
+	static void setClose(float close) {
+		Agent::close = close;
 	}
 };
 

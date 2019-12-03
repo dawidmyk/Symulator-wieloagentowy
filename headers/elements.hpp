@@ -56,12 +56,13 @@ class Point {
 class EdgeProperty {
 	//here are defined some Edge features
 	//like capacity
-	public:
+public:
+	EdgeProperty(float c) : capacity(c) {}
 	float capacity;
 };
 
 class Edge {
-	public:
+public:
 	std::general_ptr<Point> begin;
 	std::general_ptr<Point> end;
 	//these could be other types of pointer
@@ -71,13 +72,15 @@ class Edge {
 	float length;
 	float piece_length;
 	float angle;
-	
-	Edge(const std::general_ptr<Point> & begin, const std::general_ptr<Point> & end):
+
+	Edge(const std::general_ptr<Point> & begin, const std::general_ptr<Point> & end, int fragments = 0, float capacity = 1) :
 		begin(begin),
 		end(end),
 		properties_num(0)
-		{	
-		}
+	{
+		EdgeProperty property = EdgeProperty(capacity);
+		addProperty(property);
+	}
 	
 	
 	void countDimensions();

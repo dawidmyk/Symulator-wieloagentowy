@@ -2,6 +2,9 @@
 #include <random>
 //In future we will use random here
 //and later something even more wise - heuristics
+
+float Point::close;
+
 std::pair<std::general_ptr<Edge>, char> SpecialPoint::choose() {
 	int n = edges.size();
 	std::uniform_int_distribution dist(0, n - 1);

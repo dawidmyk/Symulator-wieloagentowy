@@ -1,6 +1,7 @@
 #include <chrono>
 #include "../headers/agent.hpp"
 //this include should be changed when we have Makefile/Sconsfile
+float Agent::close;
 
 Agent::Agent(const std::general_ptr<Point> & begin, const std::general_ptr<Point> & end): dir(0), active(false), begin(begin),
 	end(end), fragment(-1) {

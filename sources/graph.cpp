@@ -1,4 +1,4 @@
-#include "../headers/console.hpp"
+#include "console.hpp"
 	void Graph::agentDrawThread(Console & cons, ThreadInterruptible & thread) {
 		while (thread.getCondition()) {
 			int i = 0;

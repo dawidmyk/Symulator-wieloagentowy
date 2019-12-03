@@ -1,4 +1,4 @@
-#include "../headers/elements.hpp"
+#include "elements.hpp"
 #include <random>
 //In future we will use random here
 //and later something even more wise - heuristics

@@ -1,4 +1,4 @@
-CPPFLAGS=-std=c++17 -I/headers -pthread
+CPPFLAGS=-std=c++17 -Iheaders -pthread
 OBJ=builds/simulation.o builds/graph.o builds/elements.o builds/console.o builds/agent.o builds/main.o
 
 builds/app: $(OBJ)

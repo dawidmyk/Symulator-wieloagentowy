@@ -1,7 +1,7 @@
-#include "../headers/simulation.hpp"
-#include "../headers/graph.hpp"
-#include "../headers/agent.hpp"
-#include "../headers/console.hpp"
+#include "simulation.hpp"
+#include "graph.hpp"
+#include "agent.hpp"
+#include "console.hpp"
 
 void Simulation::testSimulation() {
 	Graph graph;

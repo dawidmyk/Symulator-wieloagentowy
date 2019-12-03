@@ -1,5 +1,5 @@
-#include "../headers/console.hpp"
-#include "../headers/graph.hpp"
+#include "console.hpp"
+#include "graph.hpp"
 #include <iostream>
 #include <string>
 

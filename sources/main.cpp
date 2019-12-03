@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../headers/console.hpp"
+#include "console.hpp"
 
 int main()
 {

@@ -1,33 +1,42 @@
 #include <chrono>
 #include "agent.hpp"
-//this include should be changed when we have Makefile/Sconsfile
+
 double Agent::close;
 double Agent::defaultVelocity;
 
+//statyczne zmienne muszą być deklarowane oddzielnie poza samą klasą
+
 Agent::Agent(const std::general_ptr<Point> & begin, const std::general_ptr<Point> & end): dir(0), active(false), begin(begin),
 	end(end), fragment(-1) {
-		auto pointPositions = begin->locate();
+		//dopóki nie wystartuje to nie jest aktywny
+		//nie ma kierunku, bo nie jedzie po żadnej krawędzi
+		//a dir identyfikuje kierunek po określonej krawędzi
+		//i nie jest na fragmencie o jakimkolwiek sprawnym numerze (>=0)
+		auto pointPositions = begin->locate(); //pozycję agenta trzeba nastawić na pozycję punktu startowego
 		x = pointPositions.first;
-		y = pointPositions.second;	
+		y = pointPositions.second;	//i rozbieramy parę
 }
 	
 bool Agent::twoClose(const std::general_ptr<Agent> & one, const std::general_ptr<Agent> & second) {
-		std::scoped_lock lock(one->posits, second->posits);
+		std::scoped_lock lock(one->posits, second->posits); //blokada założona jednocześnie na dwóch mutexach
+		//nie da rady zrobić na 2 lock_guardy bo będzie mogło wystąpić zakleszczenie
 		double xdiff = one->x - second->x;
 		double ydiff = one->y - second->y;
-		return (sqrt(xdiff*xdiff + ydiff*ydiff) <= close);
-}
+		return (sqrt(xdiff*xdiff + ydiff*ydiff) <= close); //pitagoras mniej niż...
+} //blokada zdjęta
 
 bool Agent::crash(const std::general_ptr<Agent> & one, const std::general_ptr<Agent> & second) {
 		if(!one->checkActive()||!second->checkActive()) return false;
+		//nie mogą się spotkać (zderzyć) jeśli już nie jadą
 		bool ifClose = twoClose(one, second);
 		if(!ifClose) return false;
 		{
 			std::scoped_lock lock(one->dir_read, second->dir_read);
-			//it is to correct because there might occur a deadlock
+			//blokada podobnie jak wyżej
 			if(one->actual == second->actual && one->dir == -second->dir) return true;
+			//muszą być na tej samej krawędzi ale jechać w przeciwnym kierunku
 			return false;
-		}
+		} //blokada zdjęta
 }
 
 
@@ -47,30 +56,37 @@ void Agent::runFunction() {
 		first = second;
 		general_move = diff.count()*defaultVelocity*getVelocity();
 		pos += general_move;
-		std::lock_guard lock(posits);
+		std::lock_guard lock(posits); //założenie blokady
 		x += general_move * cosinus;
 		y += general_move * sinus;
+		//zdjęcie blokady
 	}
+	//ta funkcja próbuje emulować ciągłe przemieszczenie w 'x' i 'y'
 }
 
 void Agent::threadFunction() {
+	//W tej funkcji jest cała podróż jednego agenta
 	setActive(true);
+	//na początku tej podróży trzeba go aktywować
 	int ndebug = 0; //debug
 	auto previousOne = begin;
-	
-	auto situation = previousOne->choose(); //virtual method
+	//auto żeby nie pisać długich nazw typów (z szablonami)
+	auto situation = previousOne->choose();
+	//pierwsza krawędź podróży została wybrana (jakimś algorytmem
+	//losowym bądź heurystyką)
 	auto actual = situation.first;
-	char dir = situation.second; //this variable may be reached form other 
+	char dir = situation.second;
 	{
-			std::lock_guard lock(dir_read);
+			std::lock_guard lock(dir_read); //założenie blokady
+			//przed tym przypisaniem this->actual jest nullem
 			this->actual = actual;
 			this->dir = dir;
-	}
+	} //zdjęcie blokady
 	std::general_ptr<Point> nextOne;
 	
-	while(previousOne != end) { //because there is no defined limit
+	while(previousOne != end) { //niech dojdzie aż do swojego postanowionego końca
 
-		nextOne = actual->otherSide(previousOne);
+		nextOne = actual->otherSide(previousOne); //przeciwległy kraniec krawędzi
 		int n = actual->getFragmentNum();
 		int fin;
 		if(dir == 1) {
@@ -81,22 +97,24 @@ void Agent::threadFunction() {
 			fragment = n - 1;
 			fin = -1;
 		}
-		
+		//bo on może iść zgodnie z kierunkiem krawędzi albo wbrew mu
 		for(; fragment != fin; fragment += dir) {
-			runFunction();
+			runFunction(); //przechodzi przez fragment
 		}
 		
 		previousOne = nextOne;
 		situation = previousOne->chooseExcept(actual);
+		//następna krawędź zostaje wybrana, ale to nie może być ta
+		//która dopiero co była
 		actual = situation.first;
 		dir = situation.second;
 		{
-			std::lock_guard lock(dir_read);
+			std::lock_guard lock(dir_read); //założenie blokady
 			this->actual = actual;
 			this->dir = dir;
-		}
+		} //zdjęcie blokady
 	ndebug++;
 	}
-	
+	//na końcu podróży trzeba go dezaktywować
 	setActive(false);
 }

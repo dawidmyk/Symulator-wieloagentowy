@@ -6,9 +6,10 @@
 
 class Agent {
 	
-	static float close;
-	float x;
-	float y;
+	static double close;
+	static double defaultVelocity;
+	double x;
+	double y;
 	char dir;
 	bool active;
 	std::mutex posits;
@@ -30,10 +31,11 @@ class Agent {
 	void threadFunction();
 	
 	double getVelocity() {
+		if(actual.isEmpty()) return 0;
 		return actual->velocityAt(fragment);
 	}
 	
-	std::pair<float, float> locate() {
+	std::pair<double, double> locate() {
 		std::lock_guard lock(posits);
 		return std::pair(x, y);
 	}
@@ -63,9 +65,14 @@ class Agent {
 		pointThread->join();
 	}
 	
-	static void setClose(float close) {
+	static void setClose(double close) {
 		Agent::close = close;
 	}
+	
+	static void setVelocity(double velo) {
+		defaultVelocity = velo;
+	}
+	
 };
 
 #endif

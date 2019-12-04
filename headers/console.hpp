@@ -12,7 +12,7 @@ class ThreadInterruptible {
 	bool condition;
 	std::mutex locker;
 	public:
-	ThreadInterruptible(): condition(false) {}
+	ThreadInterruptible(): condition(true) {}
 	void setThread(std::unique_ptr<std::thread> thread) {
 		threadInstance = std::move(thread);
 	}
@@ -39,6 +39,7 @@ class Console {
 	ThreadInterruptible agentDraw;
 	ThreadInterruptible agentCrash;
 	std::mutex consoleLock;
+	int n;
 	void setAgentDraw() {
 		agentDraw.setThread(std::unique_ptr<std::thread>(new std::thread(&Graph::agentDrawThread,
 		&g, std::ref(*this), std::ref(agentDraw))));
@@ -49,10 +50,10 @@ class Console {
 	}
 	
 public:
-	Console(Graph & graph): g(graph) {}
+	Console(Graph & graph): g(graph), n(0) {}
 	void run();
 	
-	void actualize(const std::general_ptr<Agent> & agent, float x, float y, int i);
+	void actualize(const std::general_ptr<Agent> & agent, double x, double y, int i);
 	
 	void noteCrash(const std::general_ptr<Agent> & ptr1, const std::general_ptr<Agent> & ptr2, int i, int j);
 

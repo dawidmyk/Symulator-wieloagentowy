@@ -4,6 +4,7 @@
 #include <string>
 
 void Console::run() {
+	g.edgesAdjust();
 	g.makeSeed();
 	g.spawnAgents();
 	setAgentDraw();
@@ -13,9 +14,11 @@ void Console::run() {
 	agentCrash.join();
 }
 
-void Console::actualize(const std::general_ptr<Agent> & agent, float x, float y, int i) {
+void Console::actualize(const std::general_ptr<Agent> & agent, double x, double y, int i) {
 	//ta metoda komunikuje się z widokiem
 	std::stringstream agentInformation;
+	agentInformation << n << ". " << std::endl;
+	n++;
 	agentInformation << "Agent nr " << i;
 	agentInformation << ", Skladowa X " << x;
 	agentInformation << ", Skladowa Y " << y;

@@ -6,6 +6,7 @@
 				std::pair posit = ptr->locate();
 				cons.actualize(ptr, posit.first, posit.second, i);
 				i++;
+				std::this_thread::sleep_for(std::chrono::milliseconds(500));
 			}
 		}
 	}
@@ -26,7 +27,7 @@
 		}
 	}
 	
-	std::general_ptr<Point> Graph::spotPoint(float x, float y) {
+	std::general_ptr<Point> Graph::spotPoint(double x, double y) {
 		std::general_ptr<Point> ret;
 		char found = 0;
 		for(auto & ptr : points) {

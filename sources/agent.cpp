@@ -1,7 +1,8 @@
 #include <chrono>
 #include "agent.hpp"
 //this include should be changed when we have Makefile/Sconsfile
-float Agent::close;
+double Agent::close;
+double Agent::defaultVelocity;
 
 Agent::Agent(const std::general_ptr<Point> & begin, const std::general_ptr<Point> & end): dir(0), active(false), begin(begin),
 	end(end), fragment(-1) {
@@ -11,10 +12,9 @@ Agent::Agent(const std::general_ptr<Point> & begin, const std::general_ptr<Point
 }
 	
 bool Agent::twoClose(const std::general_ptr<Agent> & one, const std::general_ptr<Agent> & second) {
-		std::lock_guard lock1(one->posits);
-		std::lock_guard lock2(second->posits);
-		float xdiff = one->x - second->x;
-		float ydiff = one->y - second->y;
+		std::scoped_lock lock(one->posits, second->posits);
+		double xdiff = one->x - second->x;
+		double ydiff = one->y - second->y;
 		return (sqrt(xdiff*xdiff + ydiff*ydiff) <= close);
 }
 
@@ -23,8 +23,7 @@ bool Agent::crash(const std::general_ptr<Agent> & one, const std::general_ptr<Ag
 		bool ifClose = twoClose(one, second);
 		if(!ifClose) return false;
 		{
-			std::lock_guard lock1(one->dir_read);
-			std::lock_guard lock2(second->dir_read);
+			std::scoped_lock lock(one->dir_read, second->dir_read);
 			//it is to correct because there might occur a deadlock
 			if(one->actual == second->actual && one->dir == -second->dir) return true;
 			return false;
@@ -33,20 +32,20 @@ bool Agent::crash(const std::general_ptr<Agent> & one, const std::general_ptr<Ag
 
 
 void Agent::runFunction() {
-	float pos = 0;
-	float fragmentLength = actual->getFragmentLength();
-	float angle = actual->getAngle();
-	float sinus = sin(angle);
-	float cosinus = cos(angle);
-	float general_move;
+	double pos = 0;
+	double fragmentLength = actual->getFragmentLength();
+	double angle = actual->getAngle();
+	double sinus = sin(angle);
+	double cosinus = cos(angle);
+	double general_move;
 	std::chrono::time_point<std::chrono::high_resolution_clock> first, second;
 	first = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<float> diff;
+	std::chrono::duration<double> diff;
 	while(pos < fragmentLength) {
 		second = std::chrono::high_resolution_clock::now();
 		diff = second - first;
 		first = second;
-		general_move = diff.count()*getVelocity();
+		general_move = diff.count()*defaultVelocity*getVelocity();
 		pos += general_move;
 		std::lock_guard lock(posits);
 		x += general_move * cosinus;

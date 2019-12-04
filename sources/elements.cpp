@@ -3,7 +3,7 @@
 //In future we will use random here
 //and later something even more wise - heuristics
 
-float Point::close;
+double Point::close;
 
 std::pair<std::general_ptr<Edge>, char> SpecialPoint::choose() {
 	int n = edges.size();
@@ -36,11 +36,11 @@ std::pair<std::general_ptr<Edge>, char> UsualPoint::chooseExcept(const std::gene
 	return std::pair(myEdges.second, myEdges.second->side(std::general_ptr<Point>(this)));
 }
 
-std::pair<float, float> Point::countDimensions(const std::general_ptr<Point> & one, const std::general_ptr<Point> & second) {
-		float xdiff = one->x - second->x;
-		float ydiff = one->y - second->y;
-		float distance = sqrt(xdiff*xdiff + ydiff*ydiff);
-		float angle = atan2(ydiff, xdiff);
+std::pair<double, double> Point::countDimensions(const std::general_ptr<Point> & one, const std::general_ptr<Point> & second) {
+		double xdiff = one->x - second->x;
+		double ydiff = one->y - second->y;
+		double distance = sqrt(xdiff*xdiff + ydiff*ydiff);
+		double angle = atan2(ydiff, xdiff);
 		return std::pair(distance, angle);
 }
 
@@ -51,8 +51,16 @@ void Edge::countDimensions() {
 		angle = dimensions.second;
 }
 
-bool Point::spotted(float x, float y) {
-		float xdiff = x - this->x;
-		float ydiff = y - this->y;
+bool Point::spotted(double x, double y) {
+		double xdiff = x - this->x;
+		double ydiff = y - this->y;
 		return (sqrt(xdiff*xdiff + ydiff*ydiff) <= close);
 }
+
+void Edge::countLength() {
+		auto beginPos = begin->locate();
+		auto endPos = end->locate();
+		double xdiff = beginPos.first - endPos.first;
+		double ydiff = beginPos.second - endPos.second;
+		length = sqrt(xdiff*xdiff - ydiff*ydiff);
+	}

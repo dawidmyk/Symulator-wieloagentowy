@@ -22,15 +22,15 @@ class Graph {
 	
 	public:
 	
-	void addUsualPoint(float x, float y) {
+	void addUsualPoint(double x, double y) {
 		points.push_back(std::unique_ptr<Point>(new UsualPoint(x, y, rander)));
 	}
 	
-	void addSpecialPoint(float x, float y) {
+	void addSpecialPoint(double x, double y) {
 		points.push_back(std::unique_ptr<Point>(new SpecialPoint(x, y, rander)));
 	}
 	
-	void addEdge(float x1, float y1, float x2, float y2) {
+	void addEdge(double x1, double y1, double x2, double y2) {
 		//std::general_ptr<Point> begin = spotPoint(x1, y1);
 		//std::general_ptr<Point> end = spotPoint(x2, y2);
 		//tu jeszcze nie założone że może być błąd
@@ -42,7 +42,7 @@ class Graph {
 		std::general_ptr(points.at(end)))));
 	}
 	
-	void addAgent(float x1, float y1, float x2, float y2) {
+	void addAgent(double x1, double y1, double x2, double y2) {
 		agents.push_back(std::unique_ptr<Agent>(new Agent(spotPoint(x1, y1), spotPoint(x2, y2))));
 	}
 	
@@ -62,7 +62,7 @@ class Graph {
 
 		
 	
-	std::general_ptr<Point> spotPoint(float x, float y);
+	std::general_ptr<Point> spotPoint(double x, double y);
 	
 	void agentDrawThread(Console & cons, ThreadInterruptible & thread);
 	void agentCrashThread(Console & cons, ThreadInterruptible & thread);
@@ -82,7 +82,10 @@ class Graph {
 	void makeSeed() {
 		rander.makeSeed();
 	}
-		
+	
+	void edgesAdjust() {
+		for (auto & ptr : edges) ptr->countDimensions();
+	}
 
 	
 	

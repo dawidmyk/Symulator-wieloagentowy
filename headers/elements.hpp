@@ -24,31 +24,31 @@ class Rander {
 };
 class Point {
 	
-	float x;
-	float y;
+	double x;
+	double y;
 	
 	protected:
 	Rander & rander;
 	
-	static float close;
+	static double close;
 	
 	public:
 	
-	Point(float x, float y, Rander & rander): x(x), y(y), rander(rander) {}
+	Point(double x, double y, Rander & rander): x(x), y(y), rander(rander) {}
 	
 	virtual std::pair<std::general_ptr<Edge>, char> choose() = 0;
 	virtual std::pair<std::general_ptr<Edge>, char> chooseExcept(const std::general_ptr<Edge> & exception) = 0;
 	virtual void addEdge(const std::general_ptr<Edge> & edge) = 0;
 	
-	bool spotted(float x, float y);
+	bool spotted(double x, double y);
 	
-	static std::pair<float, float> countDimensions(const std::general_ptr<Point> & one, const std::general_ptr<Point> & second);
+	static std::pair<double, double> countDimensions(const std::general_ptr<Point> & one, const std::general_ptr<Point> & second);
 	
-	std::pair<float, float> locate() {
+	std::pair<double, double> locate() {
 		return std::pair(x, y);
 	}
 	
-	static void setClose(float close) {
+	static void setClose(double close) {
 		Point::close = close;
 	}
 	
@@ -58,8 +58,8 @@ class EdgeProperty {
 	//here are defined some Edge features
 	//like capacity
 public:
-	EdgeProperty(float c) : capacity(c) {}
-	float capacity;
+	EdgeProperty(double c) : capacity(c) {}
+	double capacity;
 };
 
 class Edge {
@@ -70,11 +70,11 @@ public:
 	std::vector<EdgeProperty> properties;
 	//and other type of collection used
 	int properties_num;
-	float length;
-	float piece_length;
-	float angle;
+	double length;
+	double piece_length;
+	double angle;
 
-	Edge(const std::general_ptr<Point> & begin, const std::general_ptr<Point> & end, float capacity = 1) :
+	Edge(const std::general_ptr<Point> & begin, const std::general_ptr<Point> & end, double capacity = 1) :
 		begin(begin),
 		end(end),
 		properties_num(0)
@@ -83,10 +83,14 @@ public:
 		end->addEdge(std::general_ptr(this));
 		EdgeProperty property = EdgeProperty(capacity);
 		addProperty(property);
+		countLength();
 	}
 	
 	
 	void countDimensions();
+	
+	void countLength();
+
 		
 	double velocityAt(int fragment) {
 		return properties.at(fragment).capacity;
@@ -107,11 +111,11 @@ public:
 		return properties_num;
 	}
 	
-	float getAngle() {
+	double getAngle() {
 		return angle;
 	}
 	
-	float getFragmentLength() {
+	double getFragmentLength() {
 		return piece_length;
 	}
 	
@@ -132,7 +136,7 @@ class SpecialPoint : public Point {
 	//and represent cities
 	public:
 	
-	SpecialPoint(float x, float y, Rander & rander): Point(x, y, rander) {}
+	SpecialPoint(double x, double y, Rander & rander): Point(x, y, rander) {}
 	
 	std::vector<std::general_ptr<Edge>> edges;
 	std::pair<std::general_ptr<Edge>, char> choose(); //both virtual in base class
@@ -145,7 +149,7 @@ class SpecialPoint : public Point {
 class UsualPoint : public Point {
 	public:
 	
-	UsualPoint(float x, float y, Rander & rander): Point(x, y, rander) {}
+	UsualPoint(double x, double y, Rander & rander): Point(x, y, rander) {}
 	
 	std::pair<std::general_ptr<Edge>, std::general_ptr<Edge>> myEdges;
 	std::pair<std::general_ptr<Edge>, char> choose(); //both virtual in base class

@@ -7,6 +7,7 @@ void Simulation::testSimulation() {
 	Graph graph;
 	Agent::setClose(0.05);
 	Point::setClose(0.01);
+	Agent::setVelocity(0.01);
 	Console cons(graph);
 	graph.addSpecialPoint(0, 0);
 	graph.addUsualPoint(0, 3);

@@ -38,7 +38,8 @@ class Point {
 	
 	virtual std::pair<std::general_ptr<Edge>, char> choose() = 0;
 	virtual std::pair<std::general_ptr<Edge>, char> chooseExcept(const std::general_ptr<Edge> & exception) = 0;
-
+	virtual void addEdge(const std::general_ptr<Edge> & edge) = 0;
+	
 	bool spotted(float x, float y);
 	
 	static std::pair<float, float> countDimensions(const std::general_ptr<Point> & one, const std::general_ptr<Point> & second);
@@ -47,7 +48,7 @@ class Point {
 		return std::pair(x, y);
 	}
 	
-	void setClose(float close) {
+	static void setClose(float close) {
 		Point::close = close;
 	}
 	
@@ -73,11 +74,13 @@ public:
 	float piece_length;
 	float angle;
 
-	Edge(const std::general_ptr<Point> & begin, const std::general_ptr<Point> & end, int fragments = 0, float capacity = 1) :
+	Edge(const std::general_ptr<Point> & begin, const std::general_ptr<Point> & end, float capacity = 1) :
 		begin(begin),
 		end(end),
 		properties_num(0)
 	{
+		begin->addEdge(std::general_ptr(this));
+		end->addEdge(std::general_ptr(this));
 		EdgeProperty property = EdgeProperty(capacity);
 		addProperty(property);
 	}
@@ -90,7 +93,7 @@ public:
 	}
 	std::general_ptr<Point> otherSide(const std::general_ptr<Point> & point) {
 		if(begin == point) return end;
-		else if(begin == end) return begin;
+		else if(end == point) return begin;
 		return std::general_ptr<Point>();
 	}
 	
@@ -134,7 +137,9 @@ class SpecialPoint : public Point {
 	std::vector<std::general_ptr<Edge>> edges;
 	std::pair<std::general_ptr<Edge>, char> choose(); //both virtual in base class
 	std::pair<std::general_ptr<Edge>, char> chooseExcept(const std::general_ptr<Edge> & exception);
-	
+	void addEdge(const std::general_ptr<Edge> & edge) {
+		edges.push_back(edge);
+	}
 };
 
 class UsualPoint : public Point {
@@ -145,6 +150,10 @@ class UsualPoint : public Point {
 	std::pair<std::general_ptr<Edge>, std::general_ptr<Edge>> myEdges;
 	std::pair<std::general_ptr<Edge>, char> choose(); //both virtual in base class
 	std::pair<std::general_ptr<Edge>, char> chooseExcept(const std::general_ptr<Edge> & exception);
+	void addEdge(const std::general_ptr<Edge> & edge) {
+		if(myEdges.first.isEmpty()) myEdges.first = edge;
+		else if(myEdges.second.isEmpty()) myEdges.second = edge;
+	}
 };
 
 #endif

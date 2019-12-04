@@ -1,9 +1,10 @@
 #include <iostream>
-#include "console.hpp"
+#include "simulation.hpp"
 
 int main()
 {
-
+	Simulation sim;
+	sim.testSimulation();
 
 	getchar();
 	return 0;

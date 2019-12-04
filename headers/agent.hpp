@@ -59,6 +59,7 @@ class Agent {
 	}
 	
 	void join() {
+		if(pointThread->joinable())
 		pointThread->join();
 	}
 	

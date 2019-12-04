@@ -56,6 +56,7 @@ void Agent::runFunction() {
 
 void Agent::threadFunction() {
 	setActive(true);
+	int ndebug = 0; //debug
 	auto previousOne = begin;
 	
 	auto situation = previousOne->choose(); //virtual method
@@ -95,6 +96,8 @@ void Agent::threadFunction() {
 			this->actual = actual;
 			this->dir = dir;
 		}
+	ndebug++;
 	}
+	
 	setActive(false);
 }

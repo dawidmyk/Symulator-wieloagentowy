@@ -25,6 +25,7 @@ class ThreadInterruptible {
 		return condition;
 	}
 	void join() {
+		if(!threadInstance->joinable()) return;
 		setCondition(false);
 		threadInstance->join();
 	}

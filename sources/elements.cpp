@@ -28,7 +28,7 @@ std::pair<std::general_ptr<Edge>, char> UsualPoint::choose() {
 	std::general_ptr<Edge> edge;
 	if(i == 0) edge = myEdges.first;
 	else edge = myEdges.second;
-	return std::pair(myEdges.first, myEdges.first->side(std::general_ptr<Point>(this)));
+	return std::pair(edge, edge->side(std::general_ptr<Point>(this)));
 }
 
 std::pair<std::general_ptr<Edge>, char> UsualPoint::chooseExcept(const std::general_ptr<Edge> & exception) {
@@ -40,7 +40,7 @@ std::pair<double, double> Point::countDimensions(const std::general_ptr<Point> &
 		double xdiff = one->x - second->x;
 		double ydiff = one->y - second->y;
 		double distance = sqrt(xdiff*xdiff + ydiff*ydiff);
-		double angle = atan2(ydiff, xdiff);
+		double angle = atan2(-ydiff, -xdiff);
 		return std::pair(distance, angle);
 } //liczy ważne parametry dla krawędzi na podstawie położeń jej punktów krańcowych
 

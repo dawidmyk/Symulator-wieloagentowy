@@ -44,8 +44,8 @@ void Agent::runFunction() {
 	double pos = 0;
 	double fragmentLength = actual->getFragmentLength();
 	double angle = actual->getAngle();
-	double sinus = sin(angle);
-	double cosinus = cos(angle);
+	double sinus = sin(angle)*dir;
+	double cosinus = cos(angle)*dir;
 	double general_move;
 	std::chrono::time_point<std::chrono::high_resolution_clock> first, second;
 	first = std::chrono::high_resolution_clock::now();

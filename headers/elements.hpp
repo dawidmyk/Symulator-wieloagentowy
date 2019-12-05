@@ -119,7 +119,6 @@ public:
 		EdgeProperty property = EdgeProperty(capacity);
 		addProperty(property); //tutaj zakładamy w szkielecie że każda krawędź ma po prostu jedną
 		//Property o prędkości 1
-		countLength(); //zapuśćmy pitagorasa
 	}
 	
 	

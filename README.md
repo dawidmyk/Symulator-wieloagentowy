@@ -15,6 +15,9 @@ cmake .
 make debug
 make release
 
+Istotne wymagania:
+dostępność standardu c++17 w kompilatorze
+
 Kompilacja pod Windowsem:
 Za pomocą Cmake-GUI generują się pliki
 projektowe Visual Studio

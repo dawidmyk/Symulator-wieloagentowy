@@ -5,6 +5,8 @@
 double Console::time_reg;
 
 void Console::run() {
+	Simulation::startSimulation();
+	setWait();
 	g.edgesAdjust(); //przelicz parametry w krawędziach
 	g.makeSeed(); //zasiej losowość
 	g.spawnAgents(); //wystartuj agentów
@@ -14,6 +16,7 @@ void Console::run() {
 	g.joinAgents(); //czekaj aż agenci się zakończą (dojdą tam gdzie mają dojść)
 	agentDraw.join(); //delikatnie wymuś zatrzymanie wątku wypisującego pozycje
 	agentCrash.join(); //delikatnie wymuś zatrzymanie wątku wypisującego spotkania
+	joinWait();
 }
 
 void Console::actualize(const std::general_ptr<Agent> & agent, double x, double y, int i) {

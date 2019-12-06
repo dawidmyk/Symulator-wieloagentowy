@@ -1,5 +1,6 @@
 #include <chrono>
 #include "agent.hpp"
+#include "simulation.hpp"
 
 double Agent::close;
 double Agent::defaultVelocity;
@@ -40,7 +41,7 @@ bool Agent::crash(const std::general_ptr<Agent> & one, const std::general_ptr<Ag
 }
 
 
-void Agent::runFunction() {
+bool Agent::runFunction() {
 	double pos = 0;
 	double fragmentLength = actual->getFragmentLength();
 	double angle = actual->getAngle();
@@ -51,6 +52,7 @@ void Agent::runFunction() {
 	first = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double> diff;
 	while(pos < fragmentLength) {
+		//if(!Simulation::last()) return false;
 		second = std::chrono::high_resolution_clock::now();
 		diff = second - first;
 		first = second;
@@ -61,6 +63,7 @@ void Agent::runFunction() {
 		y += general_move * sinus;
 		//zdjęcie blokady
 	}
+	return true;
 	//ta funkcja próbuje emulować ciągłe przemieszczenie w 'x' i 'y'
 }
 
@@ -99,7 +102,8 @@ void Agent::threadFunction() {
 		}
 		//bo on może iść zgodnie z kierunkiem krawędzi albo wbrew mu
 		for(; fragment != fin; fragment += dir) {
-			runFunction(); //przechodzi przez fragment
+			if(!runFunction()) return; //przechodzi przez fragment
+			//wyjście jeśli zwróciła fałsz bo symulacja została przerwana
 		}
 		
 		previousOne = nextOne;

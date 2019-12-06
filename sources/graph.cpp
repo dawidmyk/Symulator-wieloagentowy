@@ -1,4 +1,5 @@
 #include "console.hpp"
+#include "simulation.hpp"
 	void Graph::agentDrawThread(Console & cons, ThreadInterruptible & thread) {
 		while (thread.getCondition()) {
 			int i = 0;

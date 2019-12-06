@@ -45,7 +45,7 @@ class Agent {
 	Agent(const std::general_ptr<Point> & begin, const std::general_ptr<Point> & end);
 	//punkt na którym zaczyna symulacje i na którym ma skończyć - do którego zmierza
 	
-	void runFunction(); //metoda wywoływana tylko z tej następnej
+	bool runFunction(); //metoda wywoływana tylko z tej następnej
 	//w niej jest wykonywany cały ruch na FRAGMENCIE krawędzi
 	void threadFunction(); //metoda na której jest zakładany wątek agenta
 	//w niej przejdzie całą drogą od swojego punktu początkowego do

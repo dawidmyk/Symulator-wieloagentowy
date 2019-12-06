@@ -3,6 +3,9 @@
 #include "agent.hpp"
 #include "console.hpp"
 
+std::mutex Simulation::end_lock;
+bool Simulation::end_var;
+
 void Simulation::testSimulation() {
 	Graph graph;
 	

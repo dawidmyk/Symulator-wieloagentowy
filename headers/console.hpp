@@ -5,6 +5,7 @@ Author: Mateusz Szewczyk
 #ifndef CONSOLE
 #define CONSOLE
 #include "graph.hpp"
+#include "simulation.hpp"
 #include <iostream>
 
 class ThreadInterruptible { //klasa obudowująca wątek
@@ -54,6 +55,7 @@ class Console {
 	//czyli taki jakby wskaźnik ale obsługiwany jak obiekt w zwykłej zmiennej
 	ThreadInterruptible agentDraw;
 	ThreadInterruptible agentCrash;
+	std::unique_ptr<std::thread> getchThread;
 	//Dwa wątki bo dwie funkcje odpytywania agentów - o pozycje i o zderzenia (spotkania)
 	std::mutex consoleLock; //dostęp do konsoli musi być wyłączny w danym momencie
 	int n; //który raz wypisywana jest pozycja jakiegoś agenta
@@ -70,6 +72,19 @@ class Console {
 		agentCrash.setThread(std::unique_ptr<std::thread>(new std::thread(&Graph::agentCrashThread,
 		&g, std::ref(*this), std::ref(agentCrash))));
 		//patrz komentarz wyżej
+	}
+	
+	void getchWait() {
+		getchar(); //nie potrafię w przenośny sposób zrobić by można było przerwać tą funkcję
+		Simulation::endSimulation();
+	}
+	
+	void setWait() {
+		getchThread.reset(new std::thread(&Console::getchWait, this));
+	}
+	
+	void joinWait() {
+		if(getchThread->joinable()) getchThread->join();
 	}
 	
 	public:

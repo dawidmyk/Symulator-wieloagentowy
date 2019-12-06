@@ -6,7 +6,7 @@ int main()
 	Simulation sim;
 	sim.testSimulation();
 	
-	getchar();
+	//getchar();
 	//wyłapie dopiero jak skończy się wszystko
 	return 0;
 }

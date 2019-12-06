@@ -1,0 +1,1 @@
+g++ -std=c++17 -Iheaders -o builds/app sources/*.cpp -pthread

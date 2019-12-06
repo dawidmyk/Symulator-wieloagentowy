@@ -11,11 +11,13 @@ void Console::run() {
 	g.makeSeed(); //zasiej losowość
 	g.spawnAgents(); //wystartuj agentów
 	setAgentDraw(); //zacznij wypisywanie pozycji agentów
-	setAgentCrash(); //zacznij wypisywanie informacji o spotkaniach
+	//setAgentCrash(); //zacznij wypisywanie informacji o spotkaniach
+	//jego dezaktywowałem bo on się zakleszcza
+	//nie wiem dlaczego
 	//(w obecnej konfiguracji spotkania raczej nie występują)
 	g.joinAgents(); //czekaj aż agenci się zakończą (dojdą tam gdzie mają dojść)
 	agentDraw.join(); //delikatnie wymuś zatrzymanie wątku wypisującego pozycje
-	agentCrash.join(); //delikatnie wymuś zatrzymanie wątku wypisującego spotkania
+	//agentCrash.join(); //delikatnie wymuś zatrzymanie wątku wypisującego spotkania
 	joinWait();
 }
 

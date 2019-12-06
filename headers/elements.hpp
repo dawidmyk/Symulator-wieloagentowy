@@ -171,8 +171,9 @@ public:
 };
 	
 class SpecialPoint : public Point {
-	//.. they will can be start and end points
-	//and represent cities
+	//one miałyby chyba reprezentować miasta
+	//i tylko one być końcowe/początkowe
+	//choć narazie wszystkie mogą być
 	public:
 	
 	SpecialPoint(double x, double y, Rander & rander): Point(x, y, rander) {}
@@ -200,7 +201,7 @@ class UsualPoint : public Point {
 		else if(myEdges.second.isEmpty()) myEdges.second = edge;
 		//pierwsza dodawana wchodzi na pierwszą pozycję pary
 		//druga na drugą
-		//można dodawać kolejne ale nie będą już nieobsłużone
+		//można dodawać kolejne ale nie będą już obsłużone
 	}
 };
 

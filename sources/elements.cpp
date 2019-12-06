@@ -57,7 +57,7 @@ bool Point::spotted(double x, double y) {
 		return (sqrt(xdiff*xdiff + ydiff*ydiff) <= close); //pitagoras <= ...
 }
 
-void Edge::countLength() {
+void Edge::countLength() { //nieużyta narazie
 		auto beginPos = begin->locate();
 		auto endPos = end->locate();
 		double xdiff = beginPos.first - endPos.first;

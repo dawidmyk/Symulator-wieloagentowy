@@ -21,6 +21,7 @@ Agent::Agent(const std::general_ptr<Point> & begin, const std::general_ptr<Point
 bool Agent::twoClose(const std::general_ptr<Agent> & one, const std::general_ptr<Agent> & second) {
 		std::scoped_lock lock(one->posits, second->posits); //blokada założona jednocześnie na dwóch mutexach
 		//nie da rady zrobić na 2 lock_guardy bo będzie mogło wystąpić zakleszczenie
+		//a i tak jest jakieś zakleszczenie, tylko nie zakleszcza innych wątków
 		double xdiff = one->x - second->x;
 		double ydiff = one->y - second->y;
 		return (sqrt(xdiff*xdiff + ydiff*ydiff) <= close); //pitagoras mniej niż...
@@ -52,7 +53,7 @@ bool Agent::runFunction() {
 	first = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double> diff;
 	while(pos < fragmentLength) {
-		//if(!Simulation::last()) return false;
+		if(!Simulation::last()) return false;
 		second = std::chrono::high_resolution_clock::now();
 		diff = second - first;
 		first = second;
@@ -72,6 +73,7 @@ void Agent::threadFunction() {
 	setActive(true);
 	//na początku tej podróży trzeba go aktywować
 	int ndebug = 0; //debug
+	//dzięki temu można monitorować ile krawędzi przebył
 	auto previousOne = begin;
 	//auto żeby nie pisać długich nazw typów (z szablonami)
 	auto situation = previousOne->choose();

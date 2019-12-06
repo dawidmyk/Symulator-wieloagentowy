@@ -57,6 +57,7 @@ class Console {
 	ThreadInterruptible agentCrash;
 	std::unique_ptr<std::thread> getchThread;
 	//Dwa wątki bo dwie funkcje odpytywania agentów - o pozycje i o zderzenia (spotkania)
+	//Trzeci - czekanie na wciśnięcie klawisza
 	std::mutex consoleLock; //dostęp do konsoli musi być wyłączny w danym momencie
 	int n; //który raz wypisywana jest pozycja jakiegoś agenta
 	static double time_reg; //co ile sprawdzana jest pozycja jakiegoś agenta

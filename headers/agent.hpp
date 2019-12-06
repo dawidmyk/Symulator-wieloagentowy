@@ -88,13 +88,13 @@ class Agent {
 		
 		//przydałoby się zorganizować mechanizm mutexów
 		//trochę inaczej żeby możliwe było wielu czytelników i jeden pisarz
-		//ale to mogłoby pozwolnić na zagłodzenia pisarza
+		//ale to mogłoby pozwolić na zagłodzenia pisarza
 		return active;
 	} //zwalniamy blokadę
 	
 	void join() {
 		if(pointThread->joinable()) //jeśli już wcześniej się zakończył
-		//to join dało by wyjątek, więc sprawdzamy czy się przypadkiem już
+		//to join dałoby wyjątek, więc sprawdzamy czy się przypadkiem już
 		//nie zakończył
 		
 		pointThread->join();

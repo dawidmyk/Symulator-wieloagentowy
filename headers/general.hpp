@@ -48,13 +48,16 @@ namespace std {
 		general_ptr(const std::unique_ptr<kind> & object): object(object.get()) {}
 		general_ptr(const general_ptr<kind> & another) = default;
 		//default po prostu skopiuje wszystkie pola odpowiednimi operatorami
-		//a tu jedynym polem jest wskaźnik i go się po prostu żywcem kopiuje
+		//a tu jedynym polem jest wskaźnik i go się po prostu kopiuje
+		//bez żadnych metod
 		general_ptr & operator = (const general_ptr<kind> & another) = default;
 		general_ptr & operator = (general_ptr<kind> && another) = default;
 		general_ptr & operator = (const std::unique_ptr<kind> & object) {
 			this->object = object.get();
 			return *this;
-		}
+		} //w Graph siedzi unique_ptr a my musimy zrobić general_ptr żeby
+		//go używać poza Graphem
+		
 		//standardowy model przeciążania operatora = zakłada zwracanie referencji
 		//na bieżący obiekt by można było chainować
 		//a = b = c = d;

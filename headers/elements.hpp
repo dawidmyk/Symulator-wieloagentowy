@@ -77,28 +77,12 @@ class Point {
 	
 };
 
-class EdgeProperty {
-	//tutaj są zdefiniowane pewne cechy przypisane
-	//do FRAGMENTU krawędzi
-	//narazie tylko capacity przekładające
-	//się bezpośrednio na prędkość
-	//którą będą mieli agenci (ze swoim przelicznikiem)
-	//na tej krawędzi
-public:
-	EdgeProperty(double c) : capacity(c) {}
-	double capacity;
-};
 
 class Edge {
 public:
 	std::general_ptr<Point> begin;
 	std::general_ptr<Point> end;
 	//ma początek i koniec ! jest ukierunkowana
-	std::vector<EdgeProperty> properties;
-	//tu może być coś takiego jak std::list
-	//długość tego vectora musi być równa properties_num
-	//properties_num jest osobną zmienną żeby było szybciej
-	//bo wiadomo że vector można odpytać o rozmiar
 	int properties_num;
 	double length;
 	//liczenie długości za każdym razem by naprawdę spowolniło
@@ -108,17 +92,16 @@ public:
 	//w metodzie runFunction agenta
 	double angle; //to również jest używane przez agenta
 	//w tej metodzie i liczony z tego cos i sin
+	double capacity; // przepustowość krawędzi
 
-	Edge(const std::general_ptr<Point> & begin, const std::general_ptr<Point> & end, double capacity = 1) :
+	Edge(const std::general_ptr<Point> & begin, const std::general_ptr<Point> & end, double cap = 1) :
 		begin(begin),
 		end(end),
+		capacity(cap),
 		properties_num(0)
 	{
 		begin->addEdge(std::general_ptr(this)); //ktoś musi dodać do krańców tą krawędź
 		end->addEdge(std::general_ptr(this));
-		EdgeProperty property = EdgeProperty(capacity);
-		addProperty(property); //tutaj zakładamy w szkielecie że każda krawędź ma po prostu jedną
-		//Property o prędkości 1
 	}
 	
 	
@@ -129,7 +112,7 @@ public:
 		
 	double velocityAt(int fragment) { //taki getter
 		//agent pyta o prędkość osiągalną na fragmencie o pewnym numerze
-		return properties.at(fragment).capacity;
+		return capacity;
 	}
 	std::general_ptr<Point> otherSide(const std::general_ptr<Point> & point) {
 		if(begin == point) return end;
@@ -157,17 +140,7 @@ public:
 	double getFragmentLength() { //taki getter
 		return piece_length;
 	}
-	
-	void setProperties(const std::vector<EdgeProperty> & properties) {
-		this->properties = properties;
-		properties_num = properties.size();
-	} //za jednym zamachem można ustawić wszystkie propertiesy
-	
-	void addProperty(const EdgeProperty & property) {
-		properties.push_back(property);
-		properties_num++;
-	} //albo można je dodawać sukcesywnie
-	
+
 };
 	
 class SpecialPoint : public Point {

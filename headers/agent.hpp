@@ -37,9 +37,6 @@ class Agent {
 	std::general_ptr<Edge> actual; //krawędź na której się znajduje
 	//na samym początku null
 	
-	int fragment; //używane by sprawdzić prędkość i inne ewentualne parametry
-	//miejsca w którym się znajduje
-	//znajduje się na fragmencie krawędzi o określonym numerze
 	
 	public:
 	Agent(const std::general_ptr<Point> & begin, const std::general_ptr<Point> & end);
@@ -56,7 +53,7 @@ class Agent {
 		//próbować odczytać tą prędkość zanim zostanie ustalona na początku
 		//wątku agenta
 		
-		return actual->velocityAt(fragment); //aktualnie to po prostu capacity
+		return actual->velocityAt(); //aktualnie to po prostu capacity
 		//fragmentu
 	}
 	

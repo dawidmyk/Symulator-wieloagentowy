@@ -47,7 +47,6 @@ std::pair<double, double> Point::countDimensions(const std::general_ptr<Point> &
 void Edge::countDimensions() {
 		auto dimensions = Point::countDimensions(begin, end);
 		length = dimensions.first;
-		piece_length = length/properties_num;
 		angle = dimensions.second;
 } //tu wykorzystano wcześniejszą funkcję i widać przypisania do parametrów krawędzi
 

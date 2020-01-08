@@ -8,7 +8,7 @@ double Agent::defaultVelocity;
 //statyczne zmienne muszą być deklarowane oddzielnie poza samą klasą
 
 Agent::Agent(const std::general_ptr<Point> & begin, const std::general_ptr<Point> & end): dir(0), active(false), begin(begin),
-	end(end), fragment(-1) {
+	end(end) {
 		//dopóki nie wystartuje to nie jest aktywny
 		//nie ma kierunku, bo nie jedzie po żadnej krawędzi
 		//a dir identyfikuje kierunek po określonej krawędzi
@@ -44,7 +44,7 @@ bool Agent::crash(const std::general_ptr<Agent> & one, const std::general_ptr<Ag
 
 bool Agent::runFunction() {
 	double pos = 0;
-	double fragmentLength = actual->getFragmentLength();
+	double fragmentLength = actual->getLength();
 	double angle = actual->getAngle();
 	double sinus = sin(angle)*dir;
 	double cosinus = cos(angle)*dir;
@@ -92,21 +92,10 @@ void Agent::threadFunction() {
 	while(previousOne != end) { //niech dojdzie aż do swojego postanowionego końca
 
 		nextOne = actual->otherSide(previousOne); //przeciwległy kraniec krawędzi
-		int n = actual->getFragmentNum();
-		int fin;
-		if(dir == 1) {
-			fragment = 0;
-			fin = n;
-		}
-		else if(dir == -1) {
-			fragment = n - 1;
-			fin = -1;
-		}
-		//bo on może iść zgodnie z kierunkiem krawędzi albo wbrew mu
-		for(; fragment != fin; fragment += dir) {
-			if(!runFunction()) return; //przechodzi przez fragment
-			//wyjście jeśli zwróciła fałsz bo symulacja została przerwana
-		}
+	
+		if(!runFunction()) return;
+		//wyjście jeśli zwróciła fałsz bo symulacja została przerwana
+	
 		
 		previousOne = nextOne;
 		situation = previousOne->chooseExcept(actual);

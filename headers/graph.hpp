@@ -65,13 +65,6 @@ class Graph {
 		std::general_ptr(points.at(end)))));
 	} //
 	
-	void setEdgeProperties(int nume, const std::vector<EdgeProperty> & properties) {
-		edges.at(nume)->setProperties(properties);
-	} //tutaj narazie można tylko identyfikować krawędzie po pozycja w ich wektorze
-	
-	void addEdgeProperty(int nume, const EdgeProperty & property) {
-		edges.at(nume)->addProperty(property);
-	}
 	
 
 		

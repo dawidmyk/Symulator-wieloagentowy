@@ -19,21 +19,8 @@ class Rander { //klasa losująca
 	std::mutex rand_mutex; //tylko jeden wątek może mieć dostęp jednocześnie
 	//do maszyny losującej
 	public:
-	void makeSeed() {
-		generator.reset(new std::mt19937(std::time(0)));
-		//ziarno to aktualny czas
-		//z dokładnością bodajże do sekund
-		//co jest typowe dla aplikacji losujących
-	}
-	int generate(int size) {
-		std::lock_guard lock(rand_mutex); //zajęcie blokady
-		std::uniform_int_distribution dist(0, size - 1); //definiujemy funktor
-		//którym jest jakiś konkretny rozkład - tu równomierny dyskretny
-		//0 to minimalna możliwa wylosowana liczba
-		//size-1 to maksymalna możliwa liczba
-		return dist(*generator); //funktor jako argument pobiera generator
-		//którego ma użyć do generacji
-	} //zwolnienie blokady
+	void makeSeed();
+	int generate(int size);
 };
 class Point {
 	
@@ -47,7 +34,7 @@ class Point {
 	
 	public:
 	
-	Point(double x, double y, Rander & rander): x(x), y(y), rander(rander) {}
+	Point(double x, double y, Rander & rander);
 	
 	virtual std::pair<general_ptr<Edge>, char> choose() = 0;
 	//metoda która wybiera krawędź na początku życia agenta, w jego punkcie startowym
@@ -66,14 +53,9 @@ class Point {
 	
 	static std::pair<double, double> countDimensions(const general_ptr<Point> & one, const general_ptr<Point> & second);
 	
-	std::pair<double, double> locate() { //zwraca współrzędne w postaci pary
-		//potem się do nich trzeba odwoływać jako first i second
-		return std::pair(x, y);
-	}
+	std::pair<double, double> locate();
 	
-	static void setClose(double close) {
-		Point::close = close;
-	}
+	static void setClose(double close);
 	
 };
 
@@ -85,7 +67,7 @@ class EdgeProperty {
 	//którą będą mieli agenci (ze swoim przelicznikiem)
 	//na tej krawędzi
 public:
-	EdgeProperty(double c) : capacity(c) {}
+	EdgeProperty(double c);
 	double capacity;
 };
 
@@ -109,17 +91,7 @@ public:
 	double angle; //to również jest używane przez agenta
 	//w tej metodzie i liczony z tego cos i sin
 
-	Edge(const general_ptr<Point> & begin, const general_ptr<Point> & end, double capacity = 1) :
-		begin(begin),
-		end(end),
-		properties_num(0)
-	{
-		begin->addEdge(general_ptr(this)); //ktoś musi dodać do krańców tą krawędź
-		end->addEdge(general_ptr(this));
-		EdgeProperty property = EdgeProperty(capacity);
-		addProperty(property); //tutaj zakładamy w szkielecie że każda krawędź ma po prostu jedną
-		//Property o prędkości 1
-	}
+	Edge(const general_ptr<Point> & begin, const general_ptr<Point> & end, double capacity = 1);
 	
 	
 	void countDimensions();
@@ -127,46 +99,25 @@ public:
 	void countLength();
 
 		
-	double velocityAt(int fragment) { //taki getter
-		//agent pyta o prędkość osiągalną na fragmencie o pewnym numerze
-		return properties.at(fragment).capacity;
-	}
-	general_ptr<Point> otherSide(const general_ptr<Point> & point) {
-		if(begin == point) return end;
-		else if(end == point) return begin;
-		return general_ptr<Point>(); //inaczej return nullptr
-		//znajduje punkt znajdujący się po przeciwnej stronie krawędzi niż
-		//podany
-	}
+	double velocityAt(int fragment);
 	
-	char side(const general_ptr<Point> & point) {
-		if(begin == point) return 1;
-		else if(end == point) return -1;
-		return 0;
-	} //sprawdza czy dany punkt jest końcem czy początkiem
+	general_ptr<Point> otherSide(const general_ptr<Point> & point);
+	
+	char side(const general_ptr<Point> & point);
+	//sprawdza czy dany punkt jest końcem czy początkiem
 	//czy ani jednym ani drugim
 	
-	int getFragmentNum() { //taki getter
-		return properties_num;
-	}
+	int getFragmentNum();
 	
-	double getAngle() { //taki getter
-		return angle;
-	}
+	double getAngle();
 	
-	double getFragmentLength() { //taki getter
-		return piece_length;
-	}
+	double getFragmentLength();
 	
-	void setProperties(const std::vector<EdgeProperty> & properties) {
-		this->properties = properties;
-		properties_num = properties.size();
-	} //za jednym zamachem można ustawić wszystkie propertiesy
+	void setProperties(const std::vector<EdgeProperty> & properties);
+	//za jednym zamachem można ustawić wszystkie propertiesy
 	
-	void addProperty(const EdgeProperty & property) {
-		properties.push_back(property);
-		properties_num++;
-	} //albo można je dodawać sukcesywnie
+	void addProperty(const EdgeProperty & property);
+	//albo można je dodawać sukcesywnie
 	
 };
 	
@@ -176,33 +127,27 @@ class SpecialPoint : public Point {
 	//choć narazie wszystkie mogą być
 	public:
 	
-	SpecialPoint(double x, double y, Rander & rander): Point(x, y, rander) {}
+	SpecialPoint(double x, double y, Rander & rander);
 	
 	std::vector<general_ptr<Edge>> edges; //on ma dowolną liczbę krawędzi więc trzyma je w vektorze
 	//choć mógłby w std::list
 	
 	std::pair<general_ptr<Edge>, char> choose(); //both virtual in base class
 	std::pair<general_ptr<Edge>, char> chooseExcept(const general_ptr<Edge> & exception);
-	void addEdge(const general_ptr<Edge> & edge) {
-		edges.push_back(edge); //tutaj już wiadomo jak dodać kolejną krawędź
-	} //metodą wektora do dodawania obiektów
+	void addEdge(const general_ptr<Edge> & edge);
+	//metodą wektora do dodawania obiektów
 };
 
 class UsualPoint : public Point {
 	public:
 	
-	UsualPoint(double x, double y, Rander & rander): Point(x, y, rander) {}
+	UsualPoint(double x, double y, Rander & rander);
 	
 	std::pair<general_ptr<Edge>, general_ptr<Edge>> myEdges;
 	std::pair<general_ptr<Edge>, char> choose(); //both virtual in base class
 	std::pair<general_ptr<Edge>, char> chooseExcept(const general_ptr<Edge> & exception);
-	void addEdge(const general_ptr<Edge> & edge) {
-		if(myEdges.first.isEmpty()) myEdges.first = edge;
-		else if(myEdges.second.isEmpty()) myEdges.second = edge;
-		//pierwsza dodawana wchodzi na pierwszą pozycję pary
-		//druga na drugą
-		//można dodawać kolejne ale nie będą już obsłużone
-	}
+	void addEdge(const general_ptr<Edge> & edge);
 };
 
+#include "elements.cpp"
 #endif

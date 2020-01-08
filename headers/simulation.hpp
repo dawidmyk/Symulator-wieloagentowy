@@ -14,18 +14,9 @@ class Simulation {
 	static bool end_var;
 public:
 	void testSimulation();
-	static void startSimulation() {
-		std::lock_guard lock(end_lock);
-		end_var = true;
-	}
-	static void endSimulation() {
-		std::lock_guard lock(end_lock);
-		end_var = false;
-	}
-	static bool last() {
-		std::lock_guard lock(end_lock);
-		return end_var;
-	}
+	static void startSimulation();
+	static void endSimulation();
+	static bool last();
 private:
 
 	
@@ -39,4 +30,6 @@ private:
 	int edgeCapacity;
 
 };
+
+#include "simulation.cpp"
 #endif

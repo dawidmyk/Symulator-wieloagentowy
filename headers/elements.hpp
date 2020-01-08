@@ -49,22 +49,22 @@ class Point {
 	
 	Point(double x, double y, Rander & rander): x(x), y(y), rander(rander) {}
 	
-	virtual std::pair<std::general_ptr<Edge>, char> choose() = 0;
+	virtual std::pair<general_ptr<Edge>, char> choose() = 0;
 	//metoda która wybiera krawędź na początku życia agenta, w jego punkcie startowym
 	//tam żadna krawędź nie jest wyłączona z wyboru, bo żadną nie doszedł do tego punktu
 	
-	virtual std::pair<std::general_ptr<Edge>, char> chooseExcept(const std::general_ptr<Edge> & exception) = 0;
+	virtual std::pair<general_ptr<Edge>, char> chooseExcept(const general_ptr<Edge> & exception) = 0;
 	//każdy późniejszy obór nowej krawędzi
 	//trzeba podać tą, którą się doszłą i ona nie będzie mogła zostać wybrana
 	
-	virtual void addEdge(const std::general_ptr<Edge> & edge) = 0; //punkt ma zbiór krawędzi
+	virtual void addEdge(const general_ptr<Edge> & edge) = 0; //punkt ma zbiór krawędzi
 	//(o odpowiedniej formie w każdej z klas pochodnych Pointa)
 	
 	bool spotted(double x, double y); //czy podane x i y są wystarczająco blisko
 	//x i y tego punktu, by można powiedzieć, że "strzał był udany"
 	//przydaje się przy nakładaniu krawędzi na punkty
 	
-	static std::pair<double, double> countDimensions(const std::general_ptr<Point> & one, const std::general_ptr<Point> & second);
+	static std::pair<double, double> countDimensions(const general_ptr<Point> & one, const general_ptr<Point> & second);
 	
 	std::pair<double, double> locate() { //zwraca współrzędne w postaci pary
 		//potem się do nich trzeba odwoływać jako first i second
@@ -91,8 +91,8 @@ public:
 
 class Edge {
 public:
-	std::general_ptr<Point> begin;
-	std::general_ptr<Point> end;
+	general_ptr<Point> begin;
+	general_ptr<Point> end;
 	//ma początek i koniec ! jest ukierunkowana
 	//tu może być coś takiego jak std::list
 	//długość tego vectora musi być równa properties_num
@@ -107,13 +107,13 @@ public:
 	//w tej metodzie i liczony z tego cos i sin
 	double capacity;
 	
-	Edge(const std::general_ptr<Point> & begin, const std::general_ptr<Point> & end, double cap = 1) :
+	Edge(const general_ptr<Point> & begin, const general_ptr<Point> & end, double cap = 1) :
 		begin(begin),
 		end(end),
 		capacity(cap)
 	{
-		begin->addEdge(std::general_ptr(this)); //ktoś musi dodać do krańców tą krawędź
-		end->addEdge(std::general_ptr(this));
+		begin->addEdge(general_ptr(this)); //ktoś musi dodać do krańców tą krawędź
+		end->addEdge(general_ptr(this));
 	}
 	
 	
@@ -126,15 +126,15 @@ public:
 		//agent pyta o prędkość osiągalną na fragmencie o pewnym numerze
 		return capacity;
 	}
-	std::general_ptr<Point> otherSide(const std::general_ptr<Point> & point) {
+	general_ptr<Point> otherSide(const general_ptr<Point> & point) {
 		if(begin == point) return end;
 		else if(end == point) return begin;
-		return std::general_ptr<Point>(); //inaczej return nullptr
+		return general_ptr<Point>(); //inaczej return nullptr
 		//znajduje punkt znajdujący się po przeciwnej stronie krawędzi niż
 		//podany
 	}
 	
-	char side(const std::general_ptr<Point> & point) {
+	char side(const general_ptr<Point> & point) {
 		if(begin == point) return 1;
 		else if(end == point) return -1;
 		return 0;
@@ -159,12 +159,12 @@ class SpecialPoint : public Point {
 	
 	SpecialPoint(double x, double y, Rander & rander): Point(x, y, rander) {}
 	
-	std::vector<std::general_ptr<Edge>> edges; //on ma dowolną liczbę krawędzi więc trzyma je w vektorze
+	std::vector<general_ptr<Edge>> edges; //on ma dowolną liczbę krawędzi więc trzyma je w vektorze
 	//choć mógłby w std::list
 	
-	std::pair<std::general_ptr<Edge>, char> choose(); //both virtual in base class
-	std::pair<std::general_ptr<Edge>, char> chooseExcept(const std::general_ptr<Edge> & exception);
-	void addEdge(const std::general_ptr<Edge> & edge) {
+	std::pair<general_ptr<Edge>, char> choose(); //both virtual in base class
+	std::pair<general_ptr<Edge>, char> chooseExcept(const general_ptr<Edge> & exception);
+	void addEdge(const general_ptr<Edge> & edge) {
 		edges.push_back(edge); //tutaj już wiadomo jak dodać kolejną krawędź
 	} //metodą wektora do dodawania obiektów
 };
@@ -174,10 +174,10 @@ class UsualPoint : public Point {
 	
 	UsualPoint(double x, double y, Rander & rander): Point(x, y, rander) {}
 	
-	std::pair<std::general_ptr<Edge>, std::general_ptr<Edge>> myEdges;
-	std::pair<std::general_ptr<Edge>, char> choose(); //both virtual in base class
-	std::pair<std::general_ptr<Edge>, char> chooseExcept(const std::general_ptr<Edge> & exception);
-	void addEdge(const std::general_ptr<Edge> & edge) {
+	std::pair<general_ptr<Edge>, general_ptr<Edge>> myEdges;
+	std::pair<general_ptr<Edge>, char> choose(); //both virtual in base class
+	std::pair<general_ptr<Edge>, char> chooseExcept(const general_ptr<Edge> & exception);
+	void addEdge(const general_ptr<Edge> & edge) {
 		if(myEdges.first.isEmpty()) myEdges.first = edge;
 		else if(myEdges.second.isEmpty()) myEdges.second = edge;
 		//pierwsza dodawana wchodzi na pierwszą pozycję pary

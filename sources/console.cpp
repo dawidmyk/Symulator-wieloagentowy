@@ -21,7 +21,7 @@ void Console::run() {
 	joinWait();
 }
 
-void Console::actualize(const std::general_ptr<Agent> & agent, double x, double y, int i) {
+void Console::actualize(const general_ptr<Agent> & agent, double x, double y, int i) {
 	//ta metoda komunikuje się z widokiem
 	std::stringstream agentInformation;
 	agentInformation << n << ". " << std::endl; //numer kolejnego wypisania
@@ -37,7 +37,7 @@ void Console::actualize(const std::general_ptr<Agent> & agent, double x, double 
 	//zeby wypisywać co jakiś czas, a nie ciągle
 } //zdjęcie blokady
 
-void Console::noteCrash(const std::general_ptr<Agent> & ptr1, const std::general_ptr<Agent> & ptr2, int i, int j) {
+void Console::noteCrash(const general_ptr<Agent> & ptr1, const general_ptr<Agent> & ptr2, int i, int j) {
 	std::stringstream crashInformation;
 	crashInformation << "Agent nr " << i;
 	crashInformation << "<->";

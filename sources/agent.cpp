@@ -7,7 +7,7 @@ double Agent::defaultVelocity;
 
 //statyczne zmienne muszą być deklarowane oddzielnie poza samą klasą
 
-Agent::Agent(const std::general_ptr<Point> & begin, const std::general_ptr<Point> & end): dir(0), active(false), begin(begin),
+Agent::Agent(const general_ptr<Point> & begin, const general_ptr<Point> & end): dir(0), active(false), begin(begin),
 	end(end) {
 		//dopóki nie wystartuje to nie jest aktywny
 		//nie ma kierunku, bo nie jedzie po żadnej krawędzi
@@ -18,7 +18,7 @@ Agent::Agent(const std::general_ptr<Point> & begin, const std::general_ptr<Point
 		y = pointPositions.second;	//i rozbieramy parę
 }
 	
-bool Agent::twoClose(const std::general_ptr<Agent> & one, const std::general_ptr<Agent> & second) {
+bool Agent::twoClose(const general_ptr<Agent> & one, const general_ptr<Agent> & second) {
 		std::scoped_lock lock(one->posits, second->posits); //blokada założona jednocześnie na dwóch mutexach
 		//nie da rady zrobić na 2 lock_guardy bo będzie mogło wystąpić zakleszczenie
 		//a i tak jest jakieś zakleszczenie, tylko nie zakleszcza innych wątków
@@ -27,7 +27,7 @@ bool Agent::twoClose(const std::general_ptr<Agent> & one, const std::general_ptr
 		return (sqrt(xdiff*xdiff + ydiff*ydiff) <= close); //pitagoras mniej niż...
 } //blokada zdjęta
 
-bool Agent::crash(const std::general_ptr<Agent> & one, const std::general_ptr<Agent> & second) {
+bool Agent::crash(const general_ptr<Agent> & one, const general_ptr<Agent> & second) {
 		if(!one->checkActive()||!second->checkActive()) return false;
 		//nie mogą się spotkać (zderzyć) jeśli już nie jadą
 		bool ifClose = twoClose(one, second);
@@ -87,7 +87,7 @@ void Agent::threadFunction() {
 			this->actual = actual;
 			this->dir = dir;
 	} //zdjęcie blokady
-	std::general_ptr<Point> nextOne;
+	general_ptr<Point> nextOne;
 	
 	while(previousOne != end) { //niech dojdzie aż do swojego postanowionego końca
 

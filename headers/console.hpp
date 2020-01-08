@@ -92,9 +92,9 @@ class Console {
 	Console(Graph & graph): g(graph), n(0) {}
 	void run();
 	
-	void actualize(const std::general_ptr<Agent> & agent, double x, double y, int i); //i to numer agenta
+	void actualize(const general_ptr<Agent> & agent, double x, double y, int i); //i to numer agenta
 	
-	void noteCrash(const std::general_ptr<Agent> & ptr1, const std::general_ptr<Agent> & ptr2, int i, int j);
+	void noteCrash(const general_ptr<Agent> & ptr1, const general_ptr<Agent> & ptr2, int i, int j);
 	//i oraz j to numery obydwu agentów
 
 	static void setTime(double time_reg) {

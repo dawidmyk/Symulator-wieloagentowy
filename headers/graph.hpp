@@ -48,8 +48,8 @@ class Graph {
 	}
 	
 	void addEdgeNum(int begin, int end) {
-		edges.push_back(std::unique_ptr<Edge>(new Edge(std::general_ptr(points.at(begin)),
-		std::general_ptr(points.at(end)))));
+		edges.push_back(std::unique_ptr<Edge>(new Edge(general_ptr(points.at(begin)),
+		general_ptr(points.at(end)))));
 		//rozpinamy krawędź na punktach zajmujących określone pozycje w wektorze punktów
 		//(dodane w określonej kolejności)
 		//wtedy nie musimy się wstrzelać
@@ -61,8 +61,8 @@ class Graph {
 	} //agent też może się wstrzelić w odpowiednie punkty
 	
 	void addAgentNum(int begin, int end) {
-		agents.push_back(std::unique_ptr<Agent>(new Agent(std::general_ptr(points.at(begin)),
-		std::general_ptr(points.at(end)))));
+		agents.push_back(std::unique_ptr<Agent>(new Agent(general_ptr(points.at(begin)),
+		general_ptr(points.at(end)))));
 	} //
 	
 	void setEdgeProperties(int nume, const std::vector<EdgeProperty> & properties) {
@@ -76,7 +76,7 @@ class Graph {
 
 		
 	
-	std::general_ptr<Point> spotPoint(double x, double y);
+	general_ptr<Point> spotPoint(double x, double y);
 	
 	void agentDrawThread(Console & cons, ThreadInterruptible & thread);
 	void agentCrashThread(Console & cons, ThreadInterruptible & thread);

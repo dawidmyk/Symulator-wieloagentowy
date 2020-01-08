@@ -33,8 +33,8 @@ class Agent {
 	//ale nie można go ustalić w konstruktorze
 	//agenta i dlatego tu wskaźnik
 	
-	std::general_ptr<Point> begin, end;
-	std::general_ptr<Edge> actual; //krawędź na której się znajduje
+	general_ptr<Point> begin, end;
+	general_ptr<Edge> actual; //krawędź na której się znajduje
 	//na samym początku null
 	
 	int fragment; //używane by sprawdzić prędkość i inne ewentualne parametry
@@ -42,7 +42,7 @@ class Agent {
 	//znajduje się na fragmencie krawędzi o określonym numerze
 	
 	public:
-	Agent(const std::general_ptr<Point> & begin, const std::general_ptr<Point> & end);
+	Agent(const general_ptr<Point> & begin, const general_ptr<Point> & end);
 	//punkt na którym zaczyna symulacje i na którym ma skończyć - do którego zmierza
 	
 	bool runFunction(); //metoda wywoływana tylko z tej następnej
@@ -67,10 +67,10 @@ class Agent {
 		return std::pair(x, y);
 	} //blokada jest zdejmowana
 	
-	static bool twoClose(const std::general_ptr<Agent> & one, const std::general_ptr<Agent> & second);
+	static bool twoClose(const general_ptr<Agent> & one, const general_ptr<Agent> & second);
 	//czy 2 agenty są blisko tak że można powiedzieć że się spotkały
 	
-	static bool crash(const std::general_ptr<Agent> & one, const std::general_ptr<Agent> & second);
+	static bool crash(const general_ptr<Agent> & one, const general_ptr<Agent> & second);
 	//czy 2 agenty mogą się w tej chwili spotkać (bo nie tylko liczy się odległość)
 	void spawn() {
 		pointThread.reset(new std::thread(&Agent::threadFunction, this)); //pierwszy argument to adres metody

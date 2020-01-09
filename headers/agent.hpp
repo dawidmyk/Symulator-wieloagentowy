@@ -48,63 +48,28 @@ class Agent {
 	//w niej przejdzie całą drogą od swojego punktu początkowego do
 	//końcowego
 	
-	double getVelocity() {
-		if(actual.isEmpty()) return 0; //wątek sprawdzania pozycji może
-		//próbować odczytać tą prędkość zanim zostanie ustalona na początku
-		//wątku agenta
-		
-		return actual->velocityAt(); //aktualnie to po prostu capacity
-		//fragmentu
-	}
+	double getVelocity();
 	
-	std::pair<double, double> locate() { //zwraca pozycję agenta
-		// składającej się z pary liczb rzeczywistych
-		std::lock_guard lock(posits); //trzeba do tego zasadzić blokadę bo odczyt ten bywa w innym wątku
-		//niż poruszanie się (i wogóle są 2 wątki które odczytują)
-		return std::pair(x, y);
-	} //blokada jest zdejmowana
+	std::pair<double, double> locate();
 	
 	static bool twoClose(const general_ptr<Agent> & one, const general_ptr<Agent> & second);
 	//czy 2 agenty są blisko tak że można powiedzieć że się spotkały
 	
 	static bool crash(const general_ptr<Agent> & one, const general_ptr<Agent> & second);
 	//czy 2 agenty mogą się w tej chwili spotkać (bo nie tylko liczy się odległość)
-	void spawn() {
-		pointThread.reset(new std::thread(&Agent::threadFunction, this)); //pierwszy argument to adres metody
-		
-	} //uruchamianie nowego wątku
-	//odpowiada wywołaniu funkcji [this->][Agent::]threadFunction()
+	void spawn();
 	
-	void setActive(bool active) {
-		std::lock_guard lock(activeLock); //zakładamy blokadę
-		this->active = active;
-	} //zwalniamy blokadę
+	void setActive(bool active);
 	
-	bool checkActive() {
-		std::lock_guard lock(activeLock); //zakładamy blokadę
-		
-		//przydałoby się zorganizować mechanizm mutexów
-		//trochę inaczej żeby możliwe było wielu czytelników i jeden pisarz
-		//ale to mogłoby pozwolić na zagłodzenia pisarza
-		return active;
-	} //zwalniamy blokadę
+	bool checkActive();
 	
-	void join() {
-		if(pointThread->joinable()) //jeśli już wcześniej się zakończył
-		//to join dałoby wyjątek, więc sprawdzamy czy się przypadkiem już
-		//nie zakończył
-		
-		pointThread->join();
-	}
+	void join();
 	
-	static void setClose(double close) {
-		Agent::close = close;
-	}
+	static void setClose(double close);
 	
-	static void setVelocity(double velo) {
-		defaultVelocity = velo;
-	}
+	static void setVelocity(double velo);
 	
 };
 
+#include "agent.cpp"
 #endif

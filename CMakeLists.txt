@@ -14,7 +14,7 @@ ADD_CUSTOM_TARGET(release
   COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target all
   COMMENT "Switch CMAKE_BUILD_TYPE to Release"
   )
-include_directories(headers)
+include_directories(headers inline-sources)
 file(GLOB SOURCES "sources/*.cpp")
 add_executable(app ${SOURCES})
 

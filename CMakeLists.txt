@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
+#powyższa pewnie jednak nie wystarcza
 project(App)
-set(CMAKE_CXX_FLAGS "-std=c++17 -pthread")
+set(CMAKE_CXX_FLAGS "-pthread")
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "builds")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "debug")
 ADD_CUSTOM_TARGET(debug

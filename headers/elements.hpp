@@ -27,22 +27,24 @@ class Point {
 	double x;
 	double y;
 	
+	
 	protected:
 	Rander & rander;
 	
 	static double close;
+	static double defaultCapacity;
+	static int levels;
 	
 	public:
 	
 	Point(double x, double y, Rander & rander);
 	
-	virtual std::pair<general_ptr<Edge>, char> choose() = 0;
-	//metoda która wybiera krawędź na początku życia agenta, w jego punkcie startowym
-	//tam żadna krawędź nie jest wyłączona z wyboru, bo żadną nie doszedł do tego punktu
-	
-	virtual std::pair<general_ptr<Edge>, char> chooseExcept(const general_ptr<Edge> & exception) = 0;
+	virtual std::pair<general_ptr<Edge>, char> chooseExcept
+	(const general_ptr<Edge> & exception, const general_ptr<Point> & aim) = 0;
 	//każdy późniejszy obór nowej krawędzi
 	//trzeba podać tą, którą się doszłą i ona nie będzie mogła zostać wybrana
+	
+	virtual double countExcept(const general_ptr<Edge> & exception, const general_ptr<Point> & aim, int level) = 0; 
 	
 	virtual void addEdge(const general_ptr<Edge> & edge) = 0; //punkt ma zbiór krawędzi
 	//(o odpowiedniej formie w każdej z klas pochodnych Pointa)
@@ -55,8 +57,13 @@ class Point {
 	
 	std::pair<double, double> locate();
 	
+	double countInterval(const general_ptr<Point> & aim);
+	
 	static void setClose(double close);
 	
+	static void setDefaultCapacity(double cap);
+	
+	static void setLevels(int levels);
 };
 
 class EdgeProperty {
@@ -106,6 +113,8 @@ public:
 	
 	double getLength();
 	
+	double countDelay();
+	
 };
 	
 class SpecialPoint : public Point {
@@ -119,8 +128,8 @@ class SpecialPoint : public Point {
 	std::vector<general_ptr<Edge>> edges; //on ma dowolną liczbę krawędzi więc trzyma je w vektorze
 	//choć mógłby w std::list
 	
-	std::pair<general_ptr<Edge>, char> choose(); //both virtual in base class
-	std::pair<general_ptr<Edge>, char> chooseExcept(const general_ptr<Edge> & exception);
+	std::pair<general_ptr<Edge>, char> chooseExcept(const general_ptr<Edge> & exception, const general_ptr<Point> & aim);
+	double countExcept(const general_ptr<Edge> & exception, const general_ptr<Point> & aim, int level);
 	void addEdge(const general_ptr<Edge> & edge);
 };
 
@@ -130,8 +139,8 @@ class UsualPoint : public Point {
 	UsualPoint(double x, double y, Rander & rander);
 	
 	std::pair<general_ptr<Edge>, general_ptr<Edge>> myEdges;
-	std::pair<general_ptr<Edge>, char> choose(); //both virtual in base class
-	std::pair<general_ptr<Edge>, char> chooseExcept(const general_ptr<Edge> & exception);
+	std::pair<general_ptr<Edge>, char> chooseExcept(const general_ptr<Edge> & exception, const general_ptr<Point> & aim);
+	double countExcept(const general_ptr<Edge> & exception, const general_ptr<Point> & aim, int level);
 	void addEdge(const general_ptr<Edge> & edge);
 };
 

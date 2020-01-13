@@ -1,6 +1,4 @@
 builds/*
-CMakeCache.txt
-cmake_install.cmake
-CMakeFiles/*
+cmake/*
 debug/*
 Makefile

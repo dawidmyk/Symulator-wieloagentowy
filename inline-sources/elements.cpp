@@ -26,7 +26,27 @@ inline std::pair<double, double> Point::locate() { //zwraca współrzędne w pos
 inline void Point::setClose(double close) {
 	Point::close = close;
 }
+
+inline void Point::setDefaultCapacity(double cap) {
+	Point::defaultCapacity = cap;
+}
+
+inline void Point::setLevels(int levels) {
+	Point::levels = levels;
+	//trzeba skontrolować czy złego levels
+	//nie będzie podane
+}
 	
+inline double Point::countInterval(const general_ptr<Point> & aim) {
+	double xdiff = aim->x - x;
+	double ydiff = aim->y - y;
+	return defaultCapacity * sqrt(xdiff*xdiff + ydiff*ydiff);
+}
+
+inline double Edge::countDelay() {
+	return capacity * length;
+	//tu jest prosto bo to jest wersja bez EdgeProperty
+}
 
 
 

@@ -5,36 +5,95 @@
 
 double Point::close;
 
+double Point::defaultCapacity;
+
+int Point::levels;
+
 //W funkcjach choose zwraca się parę: (krawędź, kierunek na krawędzi)
-std::pair<general_ptr<Edge>, char> SpecialPoint::choose() {
-	auto edge = edges.at(rander.generate(edges.size()));
-	return std::pair(edge, edge->side(general_ptr<Point>(this)));
+
+
+std::pair<general_ptr<Edge>, char> SpecialPoint::chooseExcept
+(const general_ptr<Edge> & exception, const general_ptr<Point> & aim) {
+	//exception może być nullptr i wtedy to nigdy nie będzie prawdą
+	auto it = edges.begin();
+	auto end = edges.end();
+	if(it == end) return std::pair(general_ptr<Edge>(), 0);
+	//powyżej powinno być rzucenie wyjątkiem
+	if(*it == exception) {
+		it++;
+		if(it == end) return std::pair(general_ptr<Edge>(), 0);
+	}
+	//powyżej powinno być rzucenie wyjątkiem
+	
+	general_ptr<Edge> best = *it;
+	double count = best->otherSide(this)->countExcept(best, aim, levels) + best->countDelay();
+	//tu jeszcze level trzeba dopisać
+	it++;
+	while (it != end) {
+		double temp = (*it)->otherSide(this)->countExcept(*it, aim, levels) + (*it)->countDelay();
+		//poniżej znak może się zmienić 
+		if(temp < count) {
+			count = temp;
+			best = *it;
+		}
+		it++;
+		if(it != end && *it == exception) it++;
+	}
+	//a kiedy są równe to czy nie losujmy?
+	return std::pair(best, best->side(general_ptr<Point>(this)));
 }
 
-std::pair<general_ptr<Edge>, char> SpecialPoint::chooseExcept(const general_ptr<Edge> & exception) {
-	int now = 0;
-	while(edges.at(now) != exception) now++;
-	//musimy odnaleźć numer podanej krawędzi 
-	int n = edges.size();
-	int randed = rander.generate(n - 1); //nie może wylosować przedostatniej
-	if(randed == now) randed = n - 1; //jeśli wylosował tą wyłączoną, to zamieni ją na przedostatnią
-	auto edge = edges.at(randed);
-	return std::pair(edge, edge->side(general_ptr<Point>(this)));
+double SpecialPoint::countExcept(const general_ptr<Edge> & exception, const general_ptr<Point> & aim, int level) {
+	//prawie to samo co wyżej
+	//exception może być nullptr i wtedy to nigdy nie będzie prawdą
+	if(exception.isEmpty()) return 0; //wyjątkiem rzuć
+	if(level == 0) return countInterval(aim);
+	//pytanie jak my powyższe przekształcamy
+	auto it = edges.begin();
+	auto end = edges.end();
+	if(it == end) return 0;
+	//powyżej powinno być rzucenie wyjątkiem
+	if(*it == exception) {
+		it++;
+		if(it == end) return 0;
+	}
+	//powyżej powinno być rzucenie wyjątkiem
+	double count = (*it)->otherSide(this)->countExcept(*it, aim, level - 1)
+		+ (*it)->countDelay();
+	it++;
+	while (it != end) {
+		double temp = (*it)->otherSide(this)->countExcept(*it, aim, level - 1)
+		+ (*it)->countDelay();
+		//poniżej znak może się zmienić 
+		if(temp < count)
+			count = temp;
+		it++;
+		if(it != end && *it == exception) it++;
+	}
+	//a kiedy są równe to czy nie losujmy?
+	return count;
 }
 
-std::pair<general_ptr<Edge>, char> UsualPoint::choose() {
-	int i = rander.generate(2); //są 2 możliwości w UsualPoincie który to może mieć
-	//tylko 2 rozejścia
-	general_ptr<Edge> edge;
-	if(i == 0) edge = myEdges.first;
-	else edge = myEdges.second;
-	return std::pair(edge, edge->side(general_ptr<Point>(this)));
-}
-
-std::pair<general_ptr<Edge>, char> UsualPoint::chooseExcept(const general_ptr<Edge> & exception) {
+std::pair<general_ptr<Edge>, char> UsualPoint::chooseExcept
+(const general_ptr<Edge> & exception, const general_ptr<Point> & aim) {
+	if(exception.isEmpty()) {
+		double count1 = myEdges.first->otherSide(this)->countExcept(myEdges.first, aim, levels);
+		double count2 = myEdges.second->otherSide(this)->countExcept(myEdges.second, aim, levels);
+		general_ptr<Edge> best = count1<count2?myEdges.first:myEdges.second;
+		return std::pair(best, best->side(general_ptr<Point>(this)));
+	}
 	if (myEdges.first != exception) return std::pair(myEdges.first, myEdges.first->side(general_ptr<Point>(this)));
 	return std::pair(myEdges.second, myEdges.second->side(general_ptr<Point>(this)));
-} //tu nie ma losowania - sytuacja jest deterministyczna - idziemy tam, skąd nie przyszliśmy
+}
+
+double UsualPoint::countExcept
+(const general_ptr<Edge> & exception, const general_ptr<Point> & aim, int level) {
+	if(exception.isEmpty()) return 0; //rzuć wyjątkiem
+	if(level == 0) return countInterval(aim);
+	if(myEdges.first != exception) return myEdges.first->otherSide(this)->countExcept(myEdges.first, aim, level - 1);
+	return myEdges.second->otherSide(this)->countExcept(myEdges.second, aim, level - 1);
+}
+//uwaga! trzeba coś dodać
 
 std::pair<double, double> Point::countDimensions(const general_ptr<Point> & one, const general_ptr<Point> & second) {
 		double xdiff = one->x - second->x;
@@ -62,4 +121,4 @@ void Edge::countLength() { //nieużyta narazie
 		double xdiff = beginPos.first - endPos.first;
 		double ydiff = beginPos.second - endPos.second;
 		length = sqrt(xdiff*xdiff - ydiff*ydiff);
-	}
+}

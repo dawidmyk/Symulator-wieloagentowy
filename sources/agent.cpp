@@ -76,7 +76,7 @@ void Agent::threadFunction() {
 	//dzięki temu można monitorować ile krawędzi przebył
 	auto previousOne = begin;
 	//auto żeby nie pisać długich nazw typów (z szablonami)
-	auto situation = previousOne->choose();
+	auto situation = previousOne->chooseExcept(general_ptr<Edge>(), end);
 	//pierwsza krawędź podróży została wybrana (jakimś algorytmem
 	//losowym bądź heurystyką)
 	auto actual = situation.first;
@@ -98,7 +98,7 @@ void Agent::threadFunction() {
 	
 		
 		previousOne = nextOne;
-		situation = previousOne->chooseExcept(actual);
+		situation = previousOne->chooseExcept(actual, end);
 		//następna krawędź zostaje wybrana, ale to nie może być ta
 		//która dopiero co była
 		actual = situation.first;

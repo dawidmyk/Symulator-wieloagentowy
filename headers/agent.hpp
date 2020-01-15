@@ -71,5 +71,5 @@ class Agent {
 	
 };
 
-#include "agent.cpp"
+#include "inline_agent.cpp"
 #endif

@@ -31,5 +31,5 @@ private:
 
 };
 
-#include "simulation.cpp"
+#include "inline_simulation.cpp"
 #endif

@@ -61,5 +61,5 @@ class Graph {
 			
 };
 
-#include "graph.cpp"
+#include "inline_graph.cpp"
 #endif

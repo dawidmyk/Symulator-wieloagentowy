@@ -66,5 +66,5 @@ class Console {
 
 };
 
-#include "console.cpp"
+#include "inline_console.cpp"
 #endif

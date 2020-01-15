@@ -144,5 +144,5 @@ class UsualPoint : public Point {
 	void addEdge(const general_ptr<Edge> & edge);
 };
 
-#include "elements.cpp"
+#include "inline_elements.cpp"
 #endif

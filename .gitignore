@@ -2,3 +2,4 @@ builds/*
 cmake/*
 debug/*
 Makefile
+html/*

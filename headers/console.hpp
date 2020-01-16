@@ -8,11 +8,12 @@ Author: Mateusz Szewczyk
 #include "simulation.hpp"
 #include <iostream>
 
-class ThreadInterruptible { //klasa obudowująca wątek
-	//stworzona by można było w sposób przyzwoity
-	//zakończyć wątek z zewnątrz
-	//dobrze się nadająca do wątków których główna funkcja
-	//jest jakąś pętlą
+class ThreadInterruptible {
+	/* klasa obudowująca wątek
+	 * stworzona by można było w sposób przyzwoity
+	 * zakończyć wątek z zewnątrz
+	 * dobrze się nadająca do wątków których główna funkcja
+	 * jest jakąś pętlą */
 	
 	std::unique_ptr<std::thread> threadInstance; //obudowany wątek
 	//unique_ptr z tego samego powodu co przy Agent

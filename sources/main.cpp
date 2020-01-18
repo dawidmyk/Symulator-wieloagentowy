@@ -6,7 +6,8 @@ int main()
 	Simulation sim;
 	sim.testSimulation();
 	
-	//getchar();
+	std::cout << "Koniec symulacji";
+	getchar();
 	//wyłapie dopiero jak skończy się wszystko
 	return 0;
 }

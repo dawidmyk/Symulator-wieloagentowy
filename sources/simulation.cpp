@@ -17,7 +17,7 @@ void Simulation::testSimulation() {
 	Point::setClose(0.01); //jak blisko musi być punkt początku
 	//krawędzi żeby się do niego dopasowała
 	
-	Agent::setVelocity(0.01); //wspólny przemnożnik prędkości
+	Agent::setVelocity(0.5); //wspólny przemnożnik prędkości
 	//wszystkich agentów
 	
 	Console::setTime(500); //co ile wypisanie kolejnej pozycji
@@ -27,20 +27,34 @@ void Simulation::testSimulation() {
 	Console cons(graph); //przekazanie referencji
 	//jest tylko jeden graf
 	
-	graph.addUsualPoint(0, 0);
-	graph.addSpecialPoint(0, 3);
-	graph.addUsualPoint(2, 0);
-	graph.addSpecialPoint(5, 2);
-	graph.addSpecialPoint(7, 3);
-	graph.addEdge(0, 0, 0, 3);
-	graph.addEdge(0, 0, 2, 0);
-	graph.addEdge(0, 3, 5, 2);
-	graph.addEdge(2, 0, 5, 2);
-	graph.addEdge(0, 3, 7, 3);
-	graph.addEdge(5, 2, 7, 3);
-	graph.addAgent(0, 0, 7, 3);
-	graph.addAgent(2, 0, 7, 3);
-	graph.addAgent(5, 2, 0, 0);
+	//graph.addUsualPoint(0, 0);
+	//graph.addSpecialPoint(0, 3);
+	//graph.addUsualPoint(2, 0);
+	//graph.addSpecialPoint(5, 2);
+	//graph.addSpecialPoint(7, 3);
+	//graph.addEdge(0, 0, 0, 3);
+	//graph.addEdge(0, 0, 2, 0);
+	//graph.addEdge(0, 3, 5, 2);
+	//graph.addEdge(2, 0, 5, 2);
+	//graph.addEdge(0, 3, 7, 3);
+	//graph.addEdge(5, 2, 7, 3);
+	//graph.addAgent(0, 0, 7, 3);
+	//graph.addAgent(2, 0, 7, 3);
+	//graph.addAgent(5, 2, 0, 0);
+
+	graph.addSpecialPoint(0, 0);
+	graph.addSpecialPoint(0, 1);
+	graph.addSpecialPoint(2, 3);
+	graph.addSpecialPoint(-1, 0);
+	graph.addSpecialPoint(0, 2);
+	graph.addEdge(0, 0, 0, 1);
+	graph.addEdge(0, 0, 2, 3);
+	graph.addEdge(0, 1, 2, 3);
+	graph.addEdge(-1, 0, 0, 0);
+	graph.addEdge(-1, 0, 2, 3);
+	graph.addEdge(0, 1, 0, 2);
+	graph.addAgent(0, 0, 0, 2);
+	graph.addAgent(0, 0, 2, 3);
 	cons.run();
 
 }

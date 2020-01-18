@@ -1,6 +1,7 @@
 #include <chrono>
 #include "agent.hpp"
 #include "simulation.hpp"
+#include <iostream>
 
 double Agent::close;
 double Agent::defaultVelocity;
@@ -110,6 +111,8 @@ void Agent::threadFunction() {
 		} //zdjęcie blokady
 	ndebug++;
 	}
+
+	std::cout << "Agent nr dotarl do celu." << std::endl; 
 	//na końcu podróży trzeba go dezaktywować
 	setActive(false);
 }

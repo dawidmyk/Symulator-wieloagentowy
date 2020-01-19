@@ -1,7 +1,4 @@
 ﻿cl : Wiersz polecenia warning D9002: ignorowanie nieznanej opcji „-pthread”
-  agent.cpp
+  console.cpp
 C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\include\xlocale(319): warning C4530: Użyta obsługa wyjątków języka C++, ale semantyka rozwinięć nie jest włączona. Określ /EHsc
-  simulation.cpp
-C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\include\xlocale(319): warning C4530: Użyta obsługa wyjątków języka C++, ale semantyka rozwinięć nie jest włączona. Określ /EHsc
-  Generowanie kodu...
   app.vcxproj -> F:\Programowanie\C++\ZPR\Symulator v3\Symulator-wieloagentowy\Debug\app.exe

@@ -5,6 +5,7 @@
 double Console::time_reg;
 
 void Console::run() {
+	//int a = getAgentsNumber();
 	Simulation::startSimulation();
 	setWait();
 	g.edgesAdjust(); //przelicz parametry w krawędziach
@@ -49,3 +50,18 @@ void Console::noteCrash(const general_ptr<Agent> & ptr1, const general_ptr<Agent
 	//bo w praktyce on będzie aktywnie oczekiwał w pętli gdzie cały czas będzie otrzymywał nieprawdę
 } //zdjęcie blokady
 
+
+int Console::getAgentsNumber()
+{
+	std::cout << "Podaj ilosc agentow: ";
+	int agentsNumber = 0;
+	std::cin >> agentsNumber;
+	std::cout << std::endl;
+	if (!std::cin) 
+	{
+		std::cout << "Niepoprawne dane " << std::endl;
+	}
+	std::lock_guard lock(consoleLock);
+
+	return agentsNumber;
+}

@@ -63,6 +63,8 @@ class Console {
 	//i oraz j to numery obydwu agentów
 
 	static void setTime(double time_reg);
+
+	int getAgentsNumber(); //pobiera od użytkownika ilość agentów i przekazuje ja do metody rozpoczynajacej symulacje
 		
 
 };

@@ -112,7 +112,7 @@ void Agent::threadFunction() {
 	ndebug++;
 	}
 
-	std::cout << "Agent nr dotarl do celu." << std::endl; 
+	std::cout << "Agent dotarl do celu." << std::endl; 
 	//na końcu podróży trzeba go dezaktywować
 	setActive(false);
 }

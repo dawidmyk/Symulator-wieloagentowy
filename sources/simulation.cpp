@@ -45,16 +45,25 @@ void Simulation::testSimulation() {
 	graph.addSpecialPoint(0, 0);
 	graph.addSpecialPoint(0, 1);
 	graph.addSpecialPoint(2, 3);
-	graph.addSpecialPoint(-1, 0);
 	graph.addSpecialPoint(0, 2);
+	graph.addSpecialPoint(0, 3);
+	graph.addSpecialPoint(1, 4);
+	graph.addSpecialPoint(1, 0);
 	graph.addEdge(0, 0, 0, 1);
 	graph.addEdge(0, 0, 2, 3);
 	graph.addEdge(0, 1, 2, 3);
-	graph.addEdge(-1, 0, 0, 0);
-	graph.addEdge(-1, 0, 2, 3);
+	graph.addEdge(0, 0, 2, 3);
 	graph.addEdge(0, 1, 0, 2);
+	graph.addEdge(0, 2, 0, 3);
+	graph.addEdge(0, 0, 1, 4);
+	graph.addEdge(0, 0, 1, 0);
 	graph.addAgent(0, 0, 0, 2);
-	graph.addAgent(0, 0, 2, 3);
+	graph.addAgent(1, 0, 0, 0);
+	//graph.addAgent(0, 0, 2, 3);
+	//graph.addAgent(0, 3, 0, 0);
+	//graph.addAgent(0, 0, 1, 4);
+	
+
 	cons.run();
 
 }

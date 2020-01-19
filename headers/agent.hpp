@@ -1,12 +1,13 @@
 ///@file 
-#include "elements.hpp"
-#include <thread>
-#include <mutex>
+
 #ifndef AGENT
 #define AGENT
+#include <thread>
+#include <mutex>
 
 ///@brief Klasa reprentująca agenta (pojazd)
 /** Jest on skojarzony ze swoim własnym wątkiem */
+class Console;
 class Agent {
 	
 	///@brief Taka odległość między agentami że można uznać że są blisko.
@@ -84,10 +85,10 @@ class Agent {
 	 * Zmieniana jest tylko w Agent::threadFunction.*/
 	 //na samym początku null
 	general_ptr<Edge> actual;
-	
+	int nume;
 	
 	public:
-	Agent(const general_ptr<Point> & begin, const general_ptr<Point> & end);
+	Agent(const general_ptr<Point> & begin, const general_ptr<Point> & end, int nume);
 	//punkt na którym zaczyna symulacje i na którym ma skończyć - do którego zmierza
 	
 	/** @brief Metoda w której są wykonywane przeliczenia matematyczne
@@ -101,7 +102,7 @@ class Agent {
 	/* metoda na której jest zakładany wątek agenta
 	 * w niej przejdzie całą drogą od swojego punktu początkowego do
 	 * końcowego */
-	void threadFunction(); 
+	void threadFunction(Console & out); 
 	
 	///@brief Zwraca przemnożnik prędkości zależny od krawędzi.
 	double getVelocity();
@@ -118,7 +119,7 @@ class Agent {
 	static bool crash(const general_ptr<Agent> & one, const general_ptr<Agent> & second);
 	
 	///@brief Rozpoczyna wątek agenta
-	void spawn();
+	void spawn(Console & out);
 	
 	///@brief Zmienia stan aktywności agenta stosując sekcję krytyczną
 	void setActive(bool active);
@@ -129,6 +130,8 @@ class Agent {
 	///@brief Kończy wątek agenta
 	void join();
 	
+	int getNume();
+	
 	///@brief Ustala wartość Agent::close, bo mogą być różne dobre wartości.
 	static void setClose(double close);
 	
@@ -137,5 +140,4 @@ class Agent {
 	
 };
 
-#include "inline_agent.cpp"
 #endif

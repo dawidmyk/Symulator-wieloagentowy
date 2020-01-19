@@ -1,21 +1,3 @@
-
-inline void Rander::makeSeed() {
-	generator.reset(new std::mt19937(std::time(0)));
-	//ziarno to aktualny czas
-	//z dokładnością bodajże do sekund
-	//co jest typowe dla aplikacji losujących
-}
-inline int Rander::generate(int size) {
-	std::lock_guard lock(rand_mutex); //zajęcie blokady
-	std::uniform_int_distribution dist(0, size - 1); //definiujemy funktor
-	//którym jest jakiś konkretny rozkład - tu równomierny dyskretny
-	//0 to minimalna możliwa wylosowana liczba
-	//size-1 to maksymalna możliwa liczba
-	return dist(*generator); //funktor jako argument pobiera generator
-	//którego ma użyć do generacji
-} //zwolnienie blokady
-
-	
 inline Point::Point(double x, double y, Rander & rander): x(x), y(y), rander(rander) {}
 
 inline std::pair<double, double> Point::locate() { //zwraca współrzędne w postaci pary
@@ -71,6 +53,10 @@ inline general_ptr<Point> Edge::otherSide(const general_ptr<Point> & point) {
 	return general_ptr<Point>(); //inaczej return nullptr
 	//znajduje punkt znajdujący się po przeciwnej stronie krawędzi niż
 	//podany
+}
+
+inline std::pair<general_ptr<Point>, general_ptr<Point>> Edge::locate() {
+	return std::pair(begin, end);
 }
 
 inline char Edge::side(const general_ptr<Point> & point) {

@@ -1,28 +1,22 @@
-#include "console.hpp"
-#include "simulation.hpp"
-	void Graph::agentDrawThread(Console & cons, ThreadInterruptible & thread) {
+#include "headers.hpp"
+	void Graph::agentDrawThread(Console & out, ThreadInterruptible & thread) {
 		while (thread.getCondition()) {
 			int i = 0;
 			for(auto & ptr : agents) {
 				std::pair posit = ptr->locate();
-				cons.actualize(ptr, posit.first, posit.second, i);
+				out.actualize(ptr, posit.first, posit.second, ptr->getNume());
 				i++;
 			}
 		}
 	} //funkcja pozycjonowania agentów (na mapie, w konsoli)
 	
-	void Graph::agentCrashThread(Console & cons, ThreadInterruptible & thread) {
+	void Graph::agentCrashThread(Console & out, ThreadInterruptible & thread) {
 		while(thread.getCondition()) {
-			int i, j;
-			i = 0;
 			for(auto & ptr1 : agents) {
-				j = 0;
 				for(auto & ptr2 : agents) {
 					if(Agent::crash(ptr1, ptr2))
-						cons.noteCrash(ptr1, ptr2, i, j);
-					j++;
+						out.noteCrash(ptr1, ptr2, ptr1->getNume(), ptr2->getNume());
 				}
-				i++;
 			}
 		}
 	} //funkcja wykrywająca (nie koniecznie wszystkie) zderzenia agentów

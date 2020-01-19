@@ -32,19 +32,19 @@ inline void Graph::addEdgeNum(int begin, int end) {
 }
 
 inline void Graph::addAgent(double x1, double y1, double x2, double y2) {
-	agents.push_back(std::unique_ptr<Agent>(new Agent(spotPoint(x1, y1), spotPoint(x2, y2))));
+	agents.push_back(std::unique_ptr<Agent>(new Agent(spotPoint(x1, y1), spotPoint(x2, y2), agents.size())));
 } //agent też może się wstrzelić w odpowiednie punkty
 
 inline void Graph::addAgentNum(int begin, int end) {
 	agents.push_back(std::unique_ptr<Agent>(new Agent(general_ptr(points.at(begin)),
-	general_ptr(points.at(end)))));
+	general_ptr(points.at(end)), agents.size())));
 } //
 
 
 
-inline void Graph::spawnAgents() {
+inline void Graph::spawnAgents(Console & out) {
 	for(auto & ptr : agents) {
-		ptr->spawn(); //uruchamia dla każdego agenta jego wątek
+		ptr->spawn(out); //uruchamia dla każdego agenta jego wątek
 	}
 }
 

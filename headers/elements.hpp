@@ -1,36 +1,16 @@
-#include "general.hpp"
-#include <vector>
-#include <cmath>
-#include <random>
-#include <mutex>
-#include <ctime>
+
 
 #ifndef ELEMENTS
 #define ELEMENTS
 
+#include <vector>
+#include <cmath>
+#include <mutex>
+#include <ctime>
+
+
 class Edge;
-/** @brief Klasa opakowująca generator z biblioteki standardowe
- * 
- * Przygotowuje go na dostęp wielowątkowy */
-class Rander { //klasa losująca
-	/* trzeba losować następną krawędź którą agent wybierze gdy dojdzie do wierzchołka
-	 * (jeśli jest wybór)
-	 * bo agent się nie będzie cofał */
-	//Tu coś trzeba napisać
-	std::unique_ptr<std::mt19937> generator; //taki specjalny generator
-	/* w unique_ptr bo obiekt Rander jest jego właścicielem ale nie może
-	 * go utworzyć od razu, bo musi zasiać mu ziarno w jego konstruktorze */
-	///@brief Realizacja sekcji krytycznej w dostępie do generatora
-	std::mutex rand_mutex; 
-	/* tylko jeden wątek może mieć dostęp jednocześnie
-	 * do maszyny losującej */
-	public:
-	///@brief Tak jak większość generatorów (pseudolosowych) musi być zasiany
-	void makeSeed();
-	///@brief Użycie generatora
-	///@param size Co może zostać zwrócone? 0 <-> size-1
-	int generate(int size);
-};
+
 
 ///@brief Abstrakcyjny punkt w przestrzeni (miasto)
 class Point {
@@ -74,7 +54,7 @@ class Point {
 	///@param aim Cel agenta, który pośrednio wywołuje tą metodę w swoim wątku (Agent::end) - niezmiennik rekursji
 	///@param level Liczba poziomów rekursji jakie jeszcze można 
 	///@return Szacowany czas dojazdu
-	virtual double countExcept(const general_ptr<Edge> & exception, const general_ptr<Point> & aim, int level) = 0; 
+	virtual Distance countExcept(const general_ptr<Edge> & exception, const general_ptr<Point> & aim, int level) = 0; 
 	
 	///@brief Dodanie krawędzi (enksapsulacja - też nie wiadomo jak krawędzie są trzymane)
 	virtual void addEdge(const general_ptr<Edge> & edge) = 0; 
@@ -179,6 +159,8 @@ public:
 	/** Używane w heurystyce */
 	double countDelay();
 	
+	std::pair<general_ptr<Point>, general_ptr<Point>> locate();
+	
 };
 	
 ///@brief Punkt który może być węzłem sieci drogowej
@@ -196,7 +178,7 @@ class SpecialPoint : public Point {
 	 * choć mógłby w std::list */
 	
 	std::pair<general_ptr<Edge>, char> chooseExcept(const general_ptr<Edge> & exception, const general_ptr<Point> & aim);
-	double countExcept(const general_ptr<Edge> & exception, const general_ptr<Point> & aim, int level);
+	Distance countExcept(const general_ptr<Edge> & exception, const general_ptr<Point> & aim, int level);
 	void addEdge(const general_ptr<Edge> & edge);
 	//Tych wirtualnych narazie nie doxygenuję
 };
@@ -213,9 +195,8 @@ class UsualPoint : public Point {
 	 * ale nie chielibyśmy dopuścić do takiej sytuacji */
 	std::pair<general_ptr<Edge>, general_ptr<Edge>> myEdges;
 	std::pair<general_ptr<Edge>, char> chooseExcept(const general_ptr<Edge> & exception, const general_ptr<Point> & aim);
-	double countExcept(const general_ptr<Edge> & exception, const general_ptr<Point> & aim, int level);
+	Distance countExcept(const general_ptr<Edge> & exception, const general_ptr<Point> & aim, int level);
 	void addEdge(const general_ptr<Edge> & edge);
 };
 
-#include "inline_elements.cpp"
 #endif

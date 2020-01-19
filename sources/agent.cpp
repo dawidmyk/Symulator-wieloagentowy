@@ -1,14 +1,13 @@
 #include <chrono>
-#include "agent.hpp"
-#include "simulation.hpp"
+#include "headers.hpp"
 
 double Agent::close;
 double Agent::defaultVelocity;
 
 //statyczne zmienne muszą być deklarowane oddzielnie poza samą klasą
 
-Agent::Agent(const general_ptr<Point> & begin, const general_ptr<Point> & end): dir(0), active(false), begin(begin),
-	end(end) {
+Agent::Agent(const general_ptr<Point> & begin, const general_ptr<Point> & end, int nume): dir(0), active(false), begin(begin),
+	end(end), nume(nume) {
 		//dopóki nie wystartuje to nie jest aktywny
 		//nie ma kierunku, bo nie jedzie po żadnej krawędzi
 		//a dir identyfikuje kierunek po określonej krawędzi
@@ -68,48 +67,55 @@ bool Agent::runFunction() {
 	//ta funkcja próbuje emulować ciągłe przemieszczenie w 'x' i 'y'
 }
 
-void Agent::threadFunction() {
+void Agent::threadFunction(Console & out) {
 	//W tej funkcji jest cała podróż jednego agenta
 	setActive(true);
 	//na początku tej podróży trzeba go aktywować
 	int ndebug = 0; //debug
 	//dzięki temu można monitorować ile krawędzi przebył
 	auto previousOne = begin;
-	//auto żeby nie pisać długich nazw typów (z szablonami)
+	//auto żeby nie pisać długich nazw typów (z szablonami)un
 	auto situation = previousOne->chooseExcept(general_ptr<Edge>(), end);
+	out.changeRoute(this, previousOne, general_ptr<Edge>(), situation.first, nume);
 	//pierwsza krawędź podróży została wybrana (jakimś algorytmem
 	//losowym bądź heurystyką)
 	auto actual = situation.first;
 	char dir = situation.second;
-	{
-			std::lock_guard lock(dir_read); //założenie blokady
-			//przed tym przypisaniem this->actual jest nullem
-			this->actual = actual;
-			this->dir = dir;
-	} //zdjęcie blokady
-	general_ptr<Point> nextOne;
-	
-	while(previousOne != end) { //niech dojdzie aż do swojego postanowionego końca
-
-		nextOne = actual->otherSide(previousOne); //przeciwległy kraniec krawędzi
-	
-		if(!runFunction()) return;
-		//wyjście jeśli zwróciła fałsz bo symulacja została przerwana
-	
-		
-		previousOne = nextOne;
-		situation = previousOne->chooseExcept(actual, end);
-		//następna krawędź zostaje wybrana, ale to nie może być ta
-		//która dopiero co była
-		actual = situation.first;
-		dir = situation.second;
+	if(dir != 0) {
 		{
-			std::lock_guard lock(dir_read); //założenie blokady
-			this->actual = actual;
-			this->dir = dir;
+				std::lock_guard lock(dir_read); //założenie blokady
+				//przed tym przypisaniem this->actual jest nullem
+				this->actual = actual;
+				this->dir = dir;
 		} //zdjęcie blokady
-	ndebug++;
+		general_ptr<Point> nextOne;
+		
+		while(previousOne != end) { //niech dojdzie aż do swojego postanowionego końca
+
+			nextOne = actual->otherSide(previousOne); //przeciwległy kraniec krawędzi
+		
+			if(!runFunction()) return;
+			//wyjście jeśli zwróciła fałsz bo symulacja została przerwana
+		
+			
+			previousOne = nextOne;
+			situation = previousOne->chooseExcept(actual, end);
+			out.changeRoute(this, previousOne, actual, situation.first, nume);
+			//następna krawędź zostaje wybrana, ale to nie może być ta
+			//która dopiero co była
+			actual = situation.first;
+			dir = situation.second;
+			
+			if(dir == 0) break;
+			{
+				std::lock_guard lock(dir_read); //założenie blokady
+				this->actual = actual;
+				this->dir = dir;
+			} //zdjęcie blokady
+		ndebug++;
+		}
 	}
+	out.endRoute(this, end, nume, previousOne == end);
 	//na końcu podróży trzeba go dezaktywować
 	setActive(false);
 }

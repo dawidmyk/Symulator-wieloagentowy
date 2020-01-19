@@ -51,5 +51,4 @@ class general_ptr {
 	
 };
 
-#include "inline_general.cpp"
 #endif

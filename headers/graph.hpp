@@ -1,12 +1,12 @@
-#include <vector>
-#include "agent.hpp"
-#include <random>
-#include <sstream>
+
 #ifndef GRAPH
 #define GRAPH
+#include <vector>
+#include <random>
+#include <sstream>
 
 class Console;
-class ThreadInterruptible;
+
 ///@brief Klasa reprezentująca sieć drogową i będąca kontenerem dla większości obiektów
 class Graph {
 	
@@ -77,7 +77,7 @@ class Graph {
 	
 	/**@brief Tworzy wątki dla wszystkich agentów już utworzonych
 	 * i trzymanych w odpowiednim kontenerze */
-	void spawnAgents();
+	void spawnAgents(Console & out);
 	
 	///@brief Czeka na zakończenie wątków wszystkich agentów
 	void joinAgents();
@@ -93,5 +93,4 @@ class Graph {
 			
 };
 
-#include "inline_graph.cpp"
 #endif

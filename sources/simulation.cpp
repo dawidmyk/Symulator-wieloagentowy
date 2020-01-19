@@ -1,13 +1,33 @@
-#include "simulation.hpp"
-#include "graph.hpp"
-#include "agent.hpp"
-#include "console.hpp"
+#include "headers.hpp"
 
 std::mutex Simulation::end_lock;
 bool Simulation::end_var;
 
+double Simulation::time_reg;
+
+void Simulation::run() {
+	Simulation::startSimulation();
+	out->setWait();
+	g->edgesAdjust(); //przelicz parametry w krawędziach
+	g->makeSeed(); //zasiej losowość
+	g->spawnAgents(*out); //wystartuj agentów
+	setAgentDraw(); //zacznij wypisywanie pozycji agentów
+	//setAgentCrash(); //zacznij wypisywanie informacji o spotkaniach
+	//jego dezaktywowałem bo on się zakleszcza
+	//nie wiem dlaczego
+	//(w obecnej konfiguracji spotkania raczej nie występują)
+	g->joinAgents(); //czekaj aż agenci się zakończą (dojdą tam gdzie mają dojść)
+	agentDraw.join(); //delikatnie wymuś zatrzymanie wątku wypisującego pozycje
+	//agentCrash.join(); //delikatnie wymuś zatrzymanie wątku wypisującego spotkania
+	out->endInform();
+	out->joinWait();
+}
+
 void Simulation::testSimulation() {
 	Graph graph;
+	Console cons;
+	g.set(&graph);
+	out.set(&cons);
 	
 	//ustalenie stałych własności symulacji
 	//(statycznych w różnych klasach)
@@ -17,30 +37,21 @@ void Simulation::testSimulation() {
 	Point::setClose(0.01); //jak blisko musi być punkt początku
 	//krawędzi żeby się do niego dopasowała
 	
-	Agent::setVelocity(0.01); //wspólny przemnożnik prędkości
+	Agent::setVelocity(0.5); //wspólny przemnożnik prędkości
 	//wszystkich agentów
 	
-	Console::setTime(500); //co ile wypisanie kolejnej pozycji
+	Point::setLevels(4);
+	
+	Point::setDefaultCapacity(0.5);
+	
+	Simulation::setTime(500); //co ile wypisanie kolejnej pozycji
 	//agentów
 	//ustalenie stałych własności symulacji
 	
-	Console cons(graph); //przekazanie referencji
-	//jest tylko jeden graf
-	
-	graph.addUsualPoint(0, 0);
-	graph.addSpecialPoint(0, 3);
-	graph.addUsualPoint(2, 0);
-	graph.addSpecialPoint(5, 2);
-	graph.addSpecialPoint(7, 3);
-	graph.addEdge(0, 0, 0, 3);
-	graph.addEdge(0, 0, 2, 0);
-	graph.addEdge(0, 3, 5, 2);
-	graph.addEdge(2, 0, 5, 2);
-	graph.addEdge(0, 3, 7, 3);
-	graph.addEdge(5, 2, 7, 3);
-	graph.addAgent(0, 0, 7, 3);
-	graph.addAgent(2, 0, 7, 3);
-	graph.addAgent(5, 2, 0, 0);
-	cons.run();
+	graph.addSpecialPoint(0, 0);
+	graph.addSpecialPoint(1, 2);
+	graph.addEdge(0, 0, 1, 2);
+	graph.addAgent(1, 2, 0, 0);
+	run();
 
 }

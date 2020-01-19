@@ -1,8 +1,8 @@
-#include "elements.hpp"
+
 #include <random>
+#include "headers.hpp"
 //In future we will use random here
 //and later something even more wise - heuristics
-
 double Point::close;
 
 double Point::defaultCapacity;
@@ -17,79 +17,84 @@ std::pair<general_ptr<Edge>, char> SpecialPoint::chooseExcept
 	//exception może być nullptr i wtedy to nigdy nie będzie prawdą
 	auto it = edges.begin();
 	auto end = edges.end();
-	if(it == end) return std::pair(general_ptr<Edge>(), 0);
-	//powyżej powinno być rzucenie wyjątkiem
-	if(*it == exception) {
-		it++;
-		if(it == end) return std::pair(general_ptr<Edge>(), 0);
-	}
-	//powyżej powinno być rzucenie wyjątkiem
-	
-	general_ptr<Edge> best = *it;
-	double count = best->otherSide(this)->countExcept(best, aim, levels) + best->countDelay();
-	//tu jeszcze level trzeba dopisać
-	it++;
+	general_ptr<Edge> best;
+	if(it == end) return std::pair(best, 0);
+	//to znaczy że punkt nie ma żadnych krawędzi
+	Distance dist(countInterval(aim), false);
 	while (it != end) {
-		double temp = (*it)->otherSide(this)->countExcept(*it, aim, levels) + (*it)->countDelay();
-		//poniżej znak może się zmienić 
-		if(temp < count) {
-			count = temp;
+		Distance new_dist = (*it)->otherSide(this)->countExcept(*it, aim, levels) + (*it)->countDelay();
+		new_dist.exception = ((*it) == exception);
+			//poniżej znak może się zmienić 
+		if(new_dist < dist) {
+			dist = new_dist;
 			best = *it;
 		}
 		it++;
-		if(it != end && *it == exception) it++;
 	}
-	//a kiedy są równe to czy nie losujmy?
+	if(best.isEmpty()) 
+		return std::pair(best, 0);
+		//agent będzie musiał rozważyć że nie wybrano żadnej krawędzi
+	//tu jest możliwość wysunięcia nullptr!
 	return std::pair(best, best->side(general_ptr<Point>(this)));
 }
 
-double SpecialPoint::countExcept(const general_ptr<Edge> & exception, const general_ptr<Point> & aim, int level) {
+Distance SpecialPoint::countExcept(const general_ptr<Edge> & exception, const general_ptr<Point> & aim, int level) {
 	//prawie to samo co wyżej
 	//exception może być nullptr i wtedy to nigdy nie będzie prawdą
-	if(exception.isEmpty()) return 0; //wyjątkiem rzuć
-	if(level == 0) return countInterval(aim);
+	if(exception.isEmpty()) throw GeneralException(std::string(__FILE__), __LINE__);
+	if(aim.get() == this)
+		return Distance(0, true);
+	if(level == 0) return Distance(countInterval(aim), true);
 	//pytanie jak my powyższe przekształcamy
 	auto it = edges.begin();
 	auto end = edges.end();
-	if(it == end) return 0;
+	if(it == end) throw GeneralException(std::string(__FILE__), __LINE__);
 	//powyżej powinno być rzucenie wyjątkiem
-	if(*it == exception) {
-		it++;
-		if(it == end) return 0;
-	}
 	//powyżej powinno być rzucenie wyjątkiem
-	double count = (*it)->otherSide(this)->countExcept(*it, aim, level - 1)
-		+ (*it)->countDelay();
-	it++;
+	Distance dist(countInterval(aim), false);
 	while (it != end) {
-		double temp = (*it)->otherSide(this)->countExcept(*it, aim, level - 1)
-		+ (*it)->countDelay();
-		//poniżej znak może się zmienić 
-		if(temp < count)
-			count = temp;
+		Distance new_dist = (*it)->otherSide(this)->countExcept(*it, aim, level - 1) + (*it)->countDelay();
+		new_dist.exception = ((*it) == exception);
+			//poniżej znak może się zmienić 
+		if(new_dist < dist) {
+			dist = new_dist;
+		}
 		it++;
-		if(it != end && *it == exception) it++;
 	}
-	//a kiedy są równe to czy nie losujmy?
-	return count;
+	dist.hide();
+	return dist;
 }
 
 std::pair<general_ptr<Edge>, char> UsualPoint::chooseExcept
 (const general_ptr<Edge> & exception, const general_ptr<Point> & aim) {
+	general_ptr<Edge> best;
+	if(myEdges.first.isEmpty() && myEdges.second.isEmpty()) return std::pair(best, 0);
+	if(myEdges.first.isEmpty()) best = myEdges.second;
+	if(myEdges.second.isEmpty()) best = myEdges.first;
 	if(exception.isEmpty()) {
-		double count1 = myEdges.first->otherSide(this)->countExcept(myEdges.first, aim, levels);
-		double count2 = myEdges.second->otherSide(this)->countExcept(myEdges.second, aim, levels);
-		general_ptr<Edge> best = count1<count2?myEdges.first:myEdges.second;
-		return std::pair(best, best->side(general_ptr<Point>(this)));
+		Distance count1 = myEdges.first->otherSide(this)->countExcept(myEdges.first, aim, levels) + myEdges.first->countDelay();
+		Distance count2 = myEdges.second->otherSide(this)->countExcept(myEdges.second, aim, levels) + myEdges.second->countDelay();
+		best = count1<count2?myEdges.first:myEdges.second;
 	}
-	if (myEdges.first != exception) return std::pair(myEdges.first, myEdges.first->side(general_ptr<Point>(this)));
-	return std::pair(myEdges.second, myEdges.second->side(general_ptr<Point>(this)));
+	if (myEdges.first != exception) 
+		best = myEdges.second;
+	else 
+		best = myEdges.first;
+	return std::pair(best, best->side(general_ptr<Point>(this)));
 }
 
-double UsualPoint::countExcept
+
+Distance UsualPoint::countExcept
 (const general_ptr<Edge> & exception, const general_ptr<Point> & aim, int level) {
-	if(exception.isEmpty()) return 0; //rzuć wyjątkiem
-	if(level == 0) return countInterval(aim);
+	if(exception.isEmpty()) throw GeneralException(std::string(__FILE__), __LINE__);
+	if(level == 0) return Distance(countInterval(aim), true);
+	if(myEdges.first.isEmpty() && myEdges.second.isEmpty()) 
+		throw GeneralException(std::string(__FILE__), __LINE__);
+
+	if(myEdges.first.isEmpty() || myEdges.second.isEmpty())
+		return Distance(countInterval(aim), false);
+		
+		//to sugeruje że nieprzezroczysty jest lepszy od cofającego
 	if(myEdges.first != exception) return myEdges.first->otherSide(this)->countExcept(myEdges.first, aim, level - 1);
 	return myEdges.second->otherSide(this)->countExcept(myEdges.second, aim, level - 1);
 }

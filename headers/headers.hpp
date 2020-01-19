@@ -5,6 +5,7 @@
 #include "thread.hpp"
 #include "elements.hpp"
 #include "agent.hpp"
+#include "output.hpp"
 #include "console.hpp"
 #include "graph.hpp"
 #include "simulation.hpp"

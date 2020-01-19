@@ -8,7 +8,7 @@ Author: Mateusz Szewczyk
 
 
 
-class Console {
+class Console : public Output {
 	
 	std::unique_ptr<std::thread> getchThread;
 	//Dwa wątki bo dwie funkcje odpytywania agentów - o pozycje i o zderzenia (spotkania)

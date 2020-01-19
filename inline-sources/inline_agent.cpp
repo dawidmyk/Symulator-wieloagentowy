@@ -16,7 +16,7 @@ inline std::pair<double, double> Agent::locate() { //zwraca pozycję agenta
 	return std::pair(x, y);
 } //blokada jest zdejmowana
 
-inline void Agent::spawn(Console & out) {
+inline void Agent::spawn(Output & out) {
 	pointThread.reset(new std::thread(&Agent::threadFunction, this, std::ref(out))); //pierwszy argument to adres metody
 	
 } //uruchamianie nowego wątku

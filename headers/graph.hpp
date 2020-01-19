@@ -5,7 +5,7 @@
 #include <random>
 #include <sstream>
 
-class Console;
+class Output;
 
 ///@brief Klasa reprezentująca sieć drogową i będąca kontenerem dla większości obiektów
 class Graph {
@@ -69,15 +69,15 @@ class Graph {
 	general_ptr<Point> spotPoint(double x, double y);
 	
 	///@brief Główna funkcja wątku rysującego
-	void agentDrawThread(Console & cons, ThreadInterruptible & thread);
+	void agentDrawThread(Output & cons, ThreadInterruptible & thread);
 	
 	///@brief Główna funkcja wątku spotkań
-	void agentCrashThread(Console & cons, ThreadInterruptible & thread);
+	void agentCrashThread(Output & cons, ThreadInterruptible & thread);
 	//te funkcje uruchamiane są w dwóch osobnych wątkach
 	
 	/**@brief Tworzy wątki dla wszystkich agentów już utworzonych
 	 * i trzymanych w odpowiednim kontenerze */
-	void spawnAgents(Console & out);
+	void spawnAgents(Output & out);
 	
 	///@brief Czeka na zakończenie wątków wszystkich agentów
 	void joinAgents();

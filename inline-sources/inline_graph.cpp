@@ -42,7 +42,7 @@ inline void Graph::addAgentNum(int begin, int end) {
 
 
 
-inline void Graph::spawnAgents(Console & out) {
+inline void Graph::spawnAgents(Output & out) {
 	for(auto & ptr : agents) {
 		ptr->spawn(out); //uruchamia dla każdego agenta jego wątek
 	}

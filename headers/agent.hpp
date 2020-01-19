@@ -7,7 +7,7 @@
 
 ///@brief Klasa reprentująca agenta (pojazd)
 /** Jest on skojarzony ze swoim własnym wątkiem */
-class Console;
+class Output;
 class Agent {
 	
 	///@brief Taka odległość między agentami że można uznać że są blisko.
@@ -102,7 +102,7 @@ class Agent {
 	/* metoda na której jest zakładany wątek agenta
 	 * w niej przejdzie całą drogą od swojego punktu początkowego do
 	 * końcowego */
-	void threadFunction(Console & out); 
+	void threadFunction(Output & out); 
 	
 	///@brief Zwraca przemnożnik prędkości zależny od krawędzi.
 	double getVelocity();
@@ -112,14 +112,14 @@ class Agent {
 	
 	///@brief Stwierdza bliskość na potrzeby analizy spotkań
 	//czy 2 agenty są blisko tak że można powiedzieć że się spotkały
-	static bool twoClose(const general_ptr<Agent> & one, const general_ptr<Agent> & second, Console & out);
+	static bool twoClose(const general_ptr<Agent> & one, const general_ptr<Agent> & second, Output & out);
 	
 	///@brief Stwiedza czy mogą się spotkać ze względu na różne czynniki
 	//czy 2 agenty mogą się w tej chwili spotkać (bo nie tylko liczy się odległość)
-	static bool crash(const general_ptr<Agent> & one, const general_ptr<Agent> & second, Console & out);
+	static bool crash(const general_ptr<Agent> & one, const general_ptr<Agent> & second, Output & out);
 	
 	///@brief Rozpoczyna wątek agenta
-	void spawn(Console & out);
+	void spawn(Output & out);
 	
 	///@brief Zmienia stan aktywności agenta stosując sekcję krytyczną
 	void setActive(bool active);

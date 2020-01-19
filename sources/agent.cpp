@@ -17,7 +17,7 @@ Agent::Agent(const general_ptr<Point> & begin, const general_ptr<Point> & end, i
 		y = pointPositions.second;	//i rozbieramy parę
 }
 	
-bool Agent::twoClose(const general_ptr<Agent> & one, const general_ptr<Agent> & second, Console & out) {
+bool Agent::twoClose(const general_ptr<Agent> & one, const general_ptr<Agent> & second, Output & out) {
 		std::scoped_lock lock(one->posits, second->posits); //blokada założona jednocześnie na dwóch mutexach
 		//nie da rady zrobić na 2 lock_guardy bo będzie mogło wystąpić zakleszczenie
 		//a i tak jest jakieś zakleszczenie, tylko nie zakleszcza innych wątków
@@ -27,7 +27,7 @@ bool Agent::twoClose(const general_ptr<Agent> & one, const general_ptr<Agent> & 
 		return (sqrt(xdiff*xdiff + ydiff*ydiff) <= close); //pitagoras mniej niż...
 } //blokada zdjęta
 
-bool Agent::crash(const general_ptr<Agent> & one, const general_ptr<Agent> & second, Console & out) {
+bool Agent::crash(const general_ptr<Agent> & one, const general_ptr<Agent> & second, Output & out) {
 		if(!one->checkActive()||!second->checkActive()) return false;
 		//nie mogą się spotkać (zderzyć) jeśli już nie jadą
 		bool ifClose = twoClose(one, second, out);
@@ -69,7 +69,7 @@ bool Agent::runFunction() {
 	//ta funkcja próbuje emulować ciągłe przemieszczenie w 'x' i 'y'
 }
 
-void Agent::threadFunction(Console & out) {
+void Agent::threadFunction(Output & out) {
 	//W tej funkcji jest cała podróż jednego agenta
 	setActive(true);
 	//na początku tej podróży trzeba go aktywować

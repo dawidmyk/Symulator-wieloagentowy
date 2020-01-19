@@ -1,5 +1,5 @@
 #include "headers.hpp"
-	void Graph::agentDrawThread(Console & out, ThreadInterruptible & thread) {
+	void Graph::agentDrawThread(Output & out, ThreadInterruptible & thread) {
 		while (thread.getCondition()) {
 			int i = 0;
 			for(auto & ptr : agents) {
@@ -10,7 +10,7 @@
 		}
 	} //funkcja pozycjonowania agentów (na mapie, w konsoli)
 	
-	void Graph::agentCrashThread(Console & out, ThreadInterruptible & thread) {
+	void Graph::agentCrashThread(Output & out, ThreadInterruptible & thread) {
 		while(thread.getCondition()) {
 			for(auto & ptr1 : agents) {
 				for(auto & ptr2 : agents) {

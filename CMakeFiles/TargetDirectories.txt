@@ -1,0 +1,5 @@
+F:/Programowanie/C++/ZPR/Symulator v3/Symulator-wieloagentowy/CMakeFiles/debug.dir
+F:/Programowanie/C++/ZPR/Symulator v3/Symulator-wieloagentowy/CMakeFiles/release.dir
+F:/Programowanie/C++/ZPR/Symulator v3/Symulator-wieloagentowy/CMakeFiles/app.dir
+F:/Programowanie/C++/ZPR/Symulator v3/Symulator-wieloagentowy/CMakeFiles/ALL_BUILD.dir
+F:/Programowanie/C++/ZPR/Symulator v3/Symulator-wieloagentowy/CMakeFiles/ZERO_CHECK.dir

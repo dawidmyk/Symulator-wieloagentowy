@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="F:\Programowanie\C++\ZPR\Symulator v3\Symulator-wieloagentowy\sources\agent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\Programowanie\C++\ZPR\Symulator v3\Symulator-wieloagentowy\sources\console.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\Programowanie\C++\ZPR\Symulator v3\Symulator-wieloagentowy\sources\distance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\Programowanie\C++\ZPR\Symulator v3\Symulator-wieloagentowy\sources\elements.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\Programowanie\C++\ZPR\Symulator v3\Symulator-wieloagentowy\sources\exception.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\Programowanie\C++\ZPR\Symulator v3\Symulator-wieloagentowy\sources\graph.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\Programowanie\C++\ZPR\Symulator v3\Symulator-wieloagentowy\sources\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\Programowanie\C++\ZPR\Symulator v3\Symulator-wieloagentowy\sources\simulation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="F:\Programowanie\C++\ZPR\Symulator v3\Symulator-wieloagentowy\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{C6C50CCE-931F-34F0-9F66-53D06E6C7BB1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

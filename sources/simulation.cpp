@@ -50,9 +50,32 @@ void Simulation::testSimulation() {
 	
 	graph.addSpecialPoint(0, 0);
 	graph.addSpecialPoint(1, 2);
+	graph.addSpecialPoint(2, 3);
+	graph.addSpecialPoint(4, 2);
+	graph.addSpecialPoint(1, 5);
+	graph.addSpecialPoint(6, 3);
+	graph.addSpecialPoint(4, 5);
 	graph.addEdge(0, 0, 1, 2);
+	graph.addEdge(0, 0, 2, 3);
+	graph.addEdge(1, 2, 2, 3);
+	graph.addEdge(1, 2, 4, 2);
+	graph.addEdge(4, 2, 2, 3);
+	graph.addEdge(4, 2, 6, 3);
+	graph.addEdge(1, 5, 2, 3);
+	graph.addEdge(1, 5, 1, 2);
+	graph.addEdge(1, 5, 4, 5);
+	graph.addEdge(2, 3, 4, 5);
+	graph.addEdge(6, 3, 4, 5);
+
 	graph.addAgent(1, 2, 0, 0);
+<<<<<<< HEAD
 	graph.addAgent(0, 0, 1, 2);
+=======
+	graph.addAgent(1, 2, 2, 3);
+	graph.addAgent(6, 3, 1, 2);
+	graph.addAgent(4, 5, 0, 0);
+	graph.addAgent(1, 5, 6, 3);
+>>>>>>> capacity
 	run();
 
 }

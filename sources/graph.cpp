@@ -15,7 +15,7 @@
 			for(auto & ptr1 : agents) {
 				for(auto & ptr2 : agents) {
 					if(ptr1 == ptr2) continue;
-					out.prenoteCrash();
+					//out.prenoteCrash();
 					if(Agent::crash(ptr1, ptr2, out))
 						out.noteCrash(ptr1, ptr2, ptr1->getNume(), ptr2->getNume());
 				}

@@ -68,14 +68,12 @@ void Simulation::testSimulation() {
 	graph.addEdge(6, 3, 4, 5);
 
 	graph.addAgent(1, 2, 0, 0);
-<<<<<<< HEAD
 	graph.addAgent(0, 0, 1, 2);
-=======
+
 	graph.addAgent(1, 2, 2, 3);
 	graph.addAgent(6, 3, 1, 2);
 	graph.addAgent(4, 5, 0, 0);
 	graph.addAgent(1, 5, 6, 3);
->>>>>>> capacity
 	run();
 
 }

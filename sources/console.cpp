@@ -95,5 +95,5 @@ void Console::prenoteCrash() {
 
 void Console::lockAchive(int i) {
 	std::lock_guard lock(consoleLock);
-	std::cout << "Udało się uzyskać blokadę: " << i << std::endl;
+	std::cout << "Udało się uzyskać blokadę: " << i << std::endl << std::endl;
 }

@@ -21,7 +21,7 @@ bool Agent::twoClose(const general_ptr<Agent> & one, const general_ptr<Agent> & 
 		std::scoped_lock lock(one->posits, second->posits); //blokada założona jednocześnie na dwóch mutexach
 		//nie da rady zrobić na 2 lock_guardy bo będzie mogło wystąpić zakleszczenie
 		//a i tak jest jakieś zakleszczenie, tylko nie zakleszcza innych wątków
-		out.lockAchive(1);
+		//out.lockAchive(1);
 		double xdiff = one->x - second->x;
 		double ydiff = one->y - second->y;
 		return (sqrt(xdiff*xdiff + ydiff*ydiff) <= close); //pitagoras mniej niż...

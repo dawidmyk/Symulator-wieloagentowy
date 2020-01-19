@@ -87,3 +87,13 @@ void Console::endInform() {
 	std::cout << "Symulacja dobiegła końca." << std::endl;
 	std::cout << "Wprowadź dowolny znak by zakończyć." << std::endl;
 }
+
+void Console::prenoteCrash() {
+	std::lock_guard lock(consoleLock);
+	std::cout << "Potencjalne spotkanie" << std::endl;
+}
+
+void Console::lockAchive(int i) {
+	std::lock_guard lock(consoleLock);
+	std::cout << "Udało się uzyskać blokadę: " << i << std::endl;
+}

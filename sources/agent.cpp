@@ -17,23 +17,25 @@ Agent::Agent(const general_ptr<Point> & begin, const general_ptr<Point> & end, i
 		y = pointPositions.second;	//i rozbieramy parę
 }
 	
-bool Agent::twoClose(const general_ptr<Agent> & one, const general_ptr<Agent> & second) {
+bool Agent::twoClose(const general_ptr<Agent> & one, const general_ptr<Agent> & second, Console & out) {
 		std::scoped_lock lock(one->posits, second->posits); //blokada założona jednocześnie na dwóch mutexach
 		//nie da rady zrobić na 2 lock_guardy bo będzie mogło wystąpić zakleszczenie
 		//a i tak jest jakieś zakleszczenie, tylko nie zakleszcza innych wątków
+		out.lockAchive(1);
 		double xdiff = one->x - second->x;
 		double ydiff = one->y - second->y;
 		return (sqrt(xdiff*xdiff + ydiff*ydiff) <= close); //pitagoras mniej niż...
 } //blokada zdjęta
 
-bool Agent::crash(const general_ptr<Agent> & one, const general_ptr<Agent> & second) {
+bool Agent::crash(const general_ptr<Agent> & one, const general_ptr<Agent> & second, Console & out) {
 		if(!one->checkActive()||!second->checkActive()) return false;
 		//nie mogą się spotkać (zderzyć) jeśli już nie jadą
-		bool ifClose = twoClose(one, second);
+		bool ifClose = twoClose(one, second, out);
 		if(!ifClose) return false;
 		{
 			std::scoped_lock lock(one->dir_read, second->dir_read);
 			//blokada podobnie jak wyżej
+			out.lockAchive(2);
 			if(one->actual == second->actual && one->dir == -second->dir) return true;
 			//muszą być na tej samej krawędzi ale jechać w przeciwnym kierunku
 			return false;

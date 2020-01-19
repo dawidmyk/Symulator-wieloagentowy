@@ -112,11 +112,11 @@ class Agent {
 	
 	///@brief Stwierdza bliskość na potrzeby analizy spotkań
 	//czy 2 agenty są blisko tak że można powiedzieć że się spotkały
-	static bool twoClose(const general_ptr<Agent> & one, const general_ptr<Agent> & second);
+	static bool twoClose(const general_ptr<Agent> & one, const general_ptr<Agent> & second, Console & out);
 	
 	///@brief Stwiedza czy mogą się spotkać ze względu na różne czynniki
 	//czy 2 agenty mogą się w tej chwili spotkać (bo nie tylko liczy się odległość)
-	static bool crash(const general_ptr<Agent> & one, const general_ptr<Agent> & second);
+	static bool crash(const general_ptr<Agent> & one, const general_ptr<Agent> & second, Console & out);
 	
 	///@brief Rozpoczyna wątek agenta
 	void spawn(Console & out);

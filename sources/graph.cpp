@@ -14,7 +14,9 @@
 		while(thread.getCondition()) {
 			for(auto & ptr1 : agents) {
 				for(auto & ptr2 : agents) {
-					if(Agent::crash(ptr1, ptr2))
+					if(ptr1 == ptr2) continue;
+					out.prenoteCrash();
+					if(Agent::crash(ptr1, ptr2, out))
 						out.noteCrash(ptr1, ptr2, ptr1->getNume(), ptr2->getNume());
 				}
 			}

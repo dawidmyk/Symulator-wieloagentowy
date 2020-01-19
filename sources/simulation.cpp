@@ -12,13 +12,13 @@ void Simulation::run() {
 	g->makeSeed(); //zasiej losowość
 	g->spawnAgents(*out); //wystartuj agentów
 	setAgentDraw(); //zacznij wypisywanie pozycji agentów
-	//setAgentCrash(); //zacznij wypisywanie informacji o spotkaniach
+	setAgentCrash(); //zacznij wypisywanie informacji o spotkaniach
 	//jego dezaktywowałem bo on się zakleszcza
 	//nie wiem dlaczego
 	//(w obecnej konfiguracji spotkania raczej nie występują)
 	g->joinAgents(); //czekaj aż agenci się zakończą (dojdą tam gdzie mają dojść)
 	agentDraw.join(); //delikatnie wymuś zatrzymanie wątku wypisującego pozycje
-	//agentCrash.join(); //delikatnie wymuś zatrzymanie wątku wypisującego spotkania
+	agentCrash.join(); //delikatnie wymuś zatrzymanie wątku wypisującego spotkania
 	out->endInform();
 	out->joinWait();
 }
@@ -31,7 +31,7 @@ void Simulation::testSimulation() {
 	
 	//ustalenie stałych własności symulacji
 	//(statycznych w różnych klasach)
-	Agent::setClose(0.05); //jak blisko muszą być od siebie
+	Agent::setClose(0.3); //jak blisko muszą być od siebie
 	//agenci by się spotkać
 	
 	Point::setClose(0.01); //jak blisko musi być punkt początku
@@ -52,6 +52,7 @@ void Simulation::testSimulation() {
 	graph.addSpecialPoint(1, 2);
 	graph.addEdge(0, 0, 1, 2);
 	graph.addAgent(1, 2, 0, 0);
+	graph.addAgent(0, 0, 1, 2);
 	run();
 
 }
